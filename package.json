@@ -1,0 +1,41 @@
+{
+  "name": "home-cam",
+  "version": "0.0.0",
+  "description": "Easily convert video streams for home cameras",
+  "author": "Ivan Kozyrin <ipkozyrin@gmail.com>",
+  "repository": "git@github.com:bozonx/squidlet.git",
+  "engines": {
+    "node": ">=10.9.0"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "test": "mocha",
+    "lint": "tslint -p tsconfig.json"
+  },
+  "dependencies": {
+    "ffmpeg": "^0.0.4",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.11",
+    "ts-node": "8.1.0",
+    "typescript": "^3.4.5",
+    "yaml": "^1.5.0",
+    "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "@types/i2c-bus": "^1.0.21",
+    "@types/js-yaml": "^3.12.1",
+    "@types/lodash": "^4.14.123",
+    "@types/node": "^11.13.8",
+    "@types/yargs": "^13.0.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "coffee-coverage": "^3.0.1",
+    "coffeescript": "^2.4.1",
+    "mocha": "^6.1.4",
+    "rewire": "^4.0.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0",
+    "tslint": "^5.16.0"
+  }
+}
