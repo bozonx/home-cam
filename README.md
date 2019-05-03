@@ -32,32 +32,18 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
         # Stream for viewing in browser
         # ffmpeg starts server only if at least one client is connected
         mjpeg:
-          user: admin
-          pasword: admin
-          host: 0.0.0.0
-          port 8181
-          url: /cam0    
           frameRate: 25
-          width: 1920
-          height: 1080
+          # make image per seconds
+          makeImage: 300
+          #width: 1920
+          #height: 1080
         # works only if someone is connected
         thumb:
+          # make image per seconds
+          makeImage: 300
           # update per seconds
-          permanent: 300
-          # update per seconds
-          onRequest: 5
-          protocol: rtsp
-          user: admin
-          pasword: admin
-          host: 192.168.88.6
-          port 8181
-          url: /thumb
+          updateInterval: 5
     config:
-      thumbDefaults:
-        width: 680
-        height: 308
-        onRequest: 5
-        permanent: 300
       mainStreamDefaults:
         protocol: rtsp
         host: 0.0.0.0
@@ -65,12 +51,26 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
         url: "/${camName}"
         frameRate: 25
       mjpegStreamDefaults:
-        protocol: mjpeg
-        host: 0.0.0.0
-        port 8181
-        url: "/${camName}"
+        frameRate: 25
+      thumbDefaults:
+        width: 680
+        height: 308
+        makeImage: 300
+        updateInterval: 5
         frameRate: 25
       ui:
         host: 0.0.0.0
         port: 8182
-        
+        url: /ui
+      httpServer:
+        host: 0.0.0.0
+        port 8181
+        user: admin
+        pasword: admin
+
+## Http server
+
+Available urls
+
+* /cams/${camName}
+* /thumbs/${camName}
