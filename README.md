@@ -19,15 +19,9 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
           url: /user=admin&password=&channel=1&stream=0.sdp
         # ffmpeg works all the time
         mainStream:
-          protocol: rtsps
-          user: admin
-          pasword: admin
-          host: 0.0.0.0
-          port 554
-          url: /cam0
           frameRate: 25
-          width: 1920
-          height: 1080
+          #width: 1920
+          #height: 1080
           # work all the time
         # Stream for viewing in browser
         # ffmpeg starts server only if at least one client is connected
@@ -44,33 +38,43 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
           # update per seconds
           updateInterval: 5
     config:
-      mainStreamDefaults:
-        protocol: rtsp
-        host: 0.0.0.0
-        port 554
-        url: "/${camName}"
-        frameRate: 25
-      mjpegStreamDefaults:
-        frameRate: 25
-      thumbDefaults:
-        width: 680
-        height: 308
-        makeImage: 300
-        updateInterval: 5
-        frameRate: 25
+      defaults:
+        mainStream:
+          frameRate: 25
+        mjpeg:
+          frameRate: 25
+        thumb:
+          width: 680
+          height: 308
+          makeImage: 300
+          updateInterval: 5
+          frameRate: 25
       ui:
         host: 0.0.0.0
         port: 8182
-        url: /ui
       httpServer:
         host: 0.0.0.0
         port 8181
         user: admin
         pasword: admin
+      rtspServer:
+        protocol: rtsps
+        user: admin
+        pasword: admin
+        host: 0.0.0.0
+        port 554
 
 ## Http server
 
 Available urls
 
-* /cams/${camName}
-* /thumbs/${camName}
+* /cams/${camName} - mjpeg stream
+* /thumbs/${camName} - mjpeg thumb stream
+* /ui - manage cameras via browser
+
+
+## Rtsp server
+
+Available urls
+
+* /cams/${camName} - streams for external recording
