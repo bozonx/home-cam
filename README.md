@@ -19,7 +19,7 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
         src:
           protocol: rtsp
           user: admin
-          pasword: admin
+          password: admin
           host: 192.168.88.6
           port 554
           url: /user=admin&password=&channel=1&stream=0.sdp
@@ -64,7 +64,6 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
         user: admin
         pasword: admin
       rtspServer:
-        protocol: rtsps
         user: admin
         pasword: admin
         host: 0.0.0.0
