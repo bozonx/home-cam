@@ -13,8 +13,8 @@ export default class RestartedProcess {
   private readonly cmd: string;
   private readonly cwd?: string;
   private readonly params: string[];
+  private readonly restartTimeout: number;
   private proc?: SpawnProcess;
-  private restartTimeout: number;
 
 
   constructor(cmd: string, params: string[], cwd?: string, restartTimeout: number = DEFAULT_RESTART_TIMEOUT) {
