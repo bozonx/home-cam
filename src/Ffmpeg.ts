@@ -1,6 +1,5 @@
 import RestartedProcess from './RestartedProcess';
 import IndexedEvents from './helpers/IndexedEvents';
-import {StdHandler} from './helpers/SpawnProcess';
 
 
 type ErrorHandler = (err: string) => void;

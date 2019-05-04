@@ -9,7 +9,6 @@ const DEFAULT_RESTART_TIMEOUT = 1000;
 export default class RestartedProcess {
   private readonly stdoutEvents = new IndexedEvents<StdHandler>();
   private readonly stderrEvents = new IndexedEvents<StdHandler>();
-  private readonly closeEvents = new IndexedEvents<CloseHandler>();
   private readonly cmd: string;
   private readonly cwd?: string;
   private readonly params: string[];
@@ -36,10 +35,6 @@ export default class RestartedProcess {
 
   onError(cb: StdHandler) {
     this.stderrEvents.addListener(cb);
-  }
-
-  onClose(cb: (code: number) => void) {
-    this.closeEvents.addListener(cb);
   }
 
 
