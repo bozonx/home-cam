@@ -43,9 +43,9 @@ export default class SpawnProcess {
       throw new Error(`No stderr of process: "${cmd}"`);
     }
 
-    spawnedCmd.stdout.on('data', (data: string) => this.stdoutEvents.emit(data));
-    spawnedCmd.stderr.on('data', (err: string) => this.stderrEvents.emit(err));
-    spawnedCmd.on('close', (code: number) => this.closeEvents.emit(code));
+    spawnedCmd.stdout.on('data', this.stdoutEvents.emit);
+    spawnedCmd.stderr.on('data', this.stderrEvents.emit);
+    spawnedCmd.on('close', this.closeEvents.emit);
   }
 
   onStdOut(cb: StdHandler) {

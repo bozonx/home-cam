@@ -1,9 +1,19 @@
 import RestartedProcess from './RestartedProcess';
+import IndexedEvents from './helpers/IndexedEvents';
+import {StdHandler} from './helpers/SpawnProcess';
+
+
+type ErrorHandler = (err: string) => void;
+
 
 export default class Ffmpeg {
+  private readonly errEvents = new IndexedEvents<ErrorHandler>();
   private readonly params: {[index: string]: any};
   private readonly restartTimeout?: number;
-  private proc?: RestartedProcess;
+  private _proc?: RestartedProcess;
+  private get proc(): RestartedProcess {
+    return this._proc as any;
+  }
 
 
   constructor(params: {[index: string]: any}, restartTimeout?: number) {
@@ -21,9 +31,13 @@ export default class Ffmpeg {
     // TODO: which use????
     const cwd = undefined;
 
-    this.proc = new RestartedProcess('ffmpeg', params, cwd, this.restartTimeout);
+    this._proc = new RestartedProcess('ffmpeg', params, cwd, this.restartTimeout);
 
+    this.proc.onError(this.errEvents.emit);
+  }
 
+  onEror(cb: ErrorHandler) {
+    this.errEvents.addListener(cb);
   }
 
 
