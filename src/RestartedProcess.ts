@@ -37,6 +37,13 @@ export default class RestartedProcess {
     this.stderrEvents.addListener(cb);
   }
 
+  destroy() {
+    this.stdoutEvents.removeAll();
+    this.stderrEvents.removeAll();
+    if (this.proc) this.proc.destroy();
+    delete this.proc;
+  }
+
 
   private makeInstance = () => {
     if (this.proc) this.proc.destroy();

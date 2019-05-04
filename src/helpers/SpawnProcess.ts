@@ -14,6 +14,7 @@ export default class SpawnProcess {
   private readonly cmd: string;
   private readonly cwd?: string;
   private readonly params: string[];
+  private spawnedCmd?: ChildProcess;
 
 
   constructor(cmd: string, params: string[], cwd?: string) {
@@ -43,9 +44,12 @@ export default class SpawnProcess {
       throw new Error(`No stderr of process: "${cmd}"`);
     }
 
+    this.spawnedCmd = spawnedCmd;
+
     spawnedCmd.stdout.on('data', this.stdoutEvents.emit);
     spawnedCmd.stderr.on('data', this.stderrEvents.emit);
     spawnedCmd.on('close', this.closeEvents.emit);
+
   }
 
   onStdOut(cb: StdHandler) {
@@ -66,6 +70,8 @@ export default class SpawnProcess {
     this.stdoutEvents.removeAll();
     this.stderrEvents.removeAll();
     this.closeEvents.removeAll();
+    if (this.spawnedCmd) this.spawnedCmd.kill('SIGTERM');
+    delete this.spawnedCmd;
   }
 
 }

@@ -39,6 +39,11 @@ export default class Ffmpeg {
     this.errEvents.addListener(cb);
   }
 
+  destroy() {
+    this.proc.destroy();
+    delete this._proc;
+  }
+
 
   private makeParams(params: {[index: string]: any}): string[] {
     const result: string[] = [];

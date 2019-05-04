@@ -44,6 +44,8 @@ export default class BrowserStream {
   }
 
   startFrmpeg() {
+
+
   //   try {
   //     const ffmpegProc = new ffmpeg('rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1');
   //
