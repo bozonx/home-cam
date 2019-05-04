@@ -1,8 +1,8 @@
-import StreamingServer from './StreamingServer';
+import BrowserStream from './BrowserStream';
 
 
 function start() {
-  const streamingServer: StreamingServer = new StreamingServer();
+  const streamingServer: BrowserStream = new BrowserStream();
 
   streamingServer.start();
 }

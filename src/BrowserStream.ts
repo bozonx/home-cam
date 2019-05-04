@@ -9,7 +9,7 @@ const NodeMediaServer = require('node-media-server');
 // file:
 //ffmpeg -re -i /home/ivan/Downloads/test.mp4 -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv rtmp://localhost/live/cam0
 
-export default class StreamingServer {
+export default class BrowserStream {
   constructor() {
 
   }
