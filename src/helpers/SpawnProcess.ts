@@ -3,8 +3,8 @@ import {ChildProcess} from "child_process";
 import IndexedEvents from './IndexedEvents';
 
 
-type StdHandler = (msg: string) => void;
-type CloseHandler = (code: number) => void;
+export type StdHandler = (msg: string) => void;
+export type CloseHandler = (code: number) => void;
 
 
 export default class SpawnProcess {
@@ -14,6 +14,7 @@ export default class SpawnProcess {
   private readonly cmd: string;
   private readonly cwd?: string;
   private readonly params: string[];
+
 
   constructor(cmd: string, params: string[], cwd?: string) {
     this.cmd = cmd;
