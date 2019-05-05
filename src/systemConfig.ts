@@ -1,3 +1,15 @@
+import {RtmpConfig} from './interfaces/MainConfig';
+
+
+const rtmpDefaults: RtmpConfig = {
+  port: 1935,
+  chunk_size: 60000,
+  gop_cache: true,
+  ping: 30,
+  ping_timeout: 60
+};
+
+
 export default {
   serversDefaults: {
     host: 'localhost',
@@ -11,4 +23,5 @@ export default {
     //browserStream: {},
     //thumb: {},
   },
+  rtmpDefaults,
 };

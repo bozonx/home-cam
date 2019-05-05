@@ -3,16 +3,18 @@ import BrowserStream from './BrowserStream';
 import {CamConfig} from './interfaces/MainConfig';
 import Ffmpeg from './Ffmpeg';
 import {makeUrl} from './helpers/helpers';
+import systemConfig from './systemConfig';
 
 
 export default class Main {
   readonly config: Config;
+  readonly systemConfig = systemConfig;
   readonly browserStream: BrowserStream;
   private readonly rtmpInstances: {[index: string]: Ffmpeg} = {};
 
 
   constructor(configPath: string) {
-    this.config = new Config(configPath);
+    this.config = new Config(configPath, this);
 
     // TODO: make for each camera
     this.browserStream = new BrowserStream(this.config);

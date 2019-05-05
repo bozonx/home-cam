@@ -18,11 +18,6 @@ export default class BrowserStream {
       logType: 3,
       rtmp: {
         ...this.config.rtmp
-        // port: 1935,
-        // chunk_size: 60000,
-        // gop_cache: true,
-        // ping: 30,
-        // ping_timeout: 60
       },
       http: {
         // TODO: set host ??? and other params
