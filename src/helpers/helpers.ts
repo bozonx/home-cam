@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 
 /**
  * Call error-first callback functions like a promised
@@ -22,7 +24,9 @@ export function makeUrl(
 ): string {
   let result = protocol + '://';
 
-  result += [host, port].join(':');
+  if (user) result += _.compact([user, password]).join(':') + '@';
+  result += _.compact([host, port]).join(':');
+  if (url) result += '/' + _.trimStart(url, '/');
 
   return result;
 }
