@@ -39,10 +39,7 @@ export default class Main {
     this.browserStream.destroy();
   }
 
-  /**
-   *
-   * @param cam
-   */
+
   async startRtmpCamServer(cam: CamConfig) {
     // Works only with reconverting a codec
     // ffmpeg -i "rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
@@ -57,7 +54,7 @@ export default class Main {
     console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to "${dsrUrl}"`);
 
     this.rtmpInstances[cam.name] = new Ffmpeg({
-      'i': '"srcUrl"',
+      'i': `"${srcUrl}"`,
       'c:v': 'libx264',
       'preset': 'superfast',
       'tune': 'zerolatency',

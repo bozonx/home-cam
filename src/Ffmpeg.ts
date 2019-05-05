@@ -33,6 +33,8 @@ export default class Ffmpeg {
 
     this._proc.start();
 
+    // TODO: print in debug mode
+
     //this.proc.onStdOut((msg: string) => console.log(msg));
     this.proc.onError(this.errEvents.emit);
   }

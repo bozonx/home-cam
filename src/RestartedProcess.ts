@@ -50,15 +50,6 @@ export default class RestartedProcess {
 
     this.proc = new SpawnProcess(this.cmd, this.params, this.cwd);
 
-    try {
-      this.proc.start();
-    }
-    catch (err) {
-      console.error(`RestartedProcess: ${err}`);
-      // restart
-      setTimeout(this.makeInstance, this.restartTimeout);
-    }
-
     this.proc.onStdOut(this.stdoutEvents.emit);
     this.proc.onError(this.stderrEvents.emit);
     this.proc.onClose((code: number) => {
@@ -71,6 +62,21 @@ export default class RestartedProcess {
       // restart
       setTimeout(this.makeInstance, this.restartTimeout);
     });
+
+
+    // TODO: review
+    try {
+      this.proc.start();
+    }
+    catch (err) {
+
+      // TODO: отписаться
+
+      console.error(`RestartedProcess: ${err}`);
+      // restart
+      setTimeout(this.makeInstance, this.restartTimeout);
+    }
+
   }
 
 }
