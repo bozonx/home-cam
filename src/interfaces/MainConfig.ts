@@ -1,6 +1,12 @@
 type SrcProtocols = 'rtsp';
 
 
+export interface StreamParams {
+  frameRate?: number;
+  width?: number;
+  height?: number;
+}
+
 export interface CamConfig {
   name: string;
   src: {
@@ -17,16 +23,8 @@ export interface CamConfig {
     // url part after host:port. If need
     url?: string;
   };
-  rtspStream: {
-    frameRate?: number;
-    width: number;
-    height?: number;
-  };
-  browserStream: {
-    frameRate?: number;
-    width: number;
-    height?: number;
-  };
+  rtspStream: StreamParams;
+  browserStream: StreamParams;
   thumb: {
     // Make image if someone is viewing it. In seconds
     updateInterval: 5

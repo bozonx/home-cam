@@ -13,11 +13,12 @@ export default class Main {
 
   constructor(configPath: string) {
     this.config = new Config(configPath);
-    this.config.make();
     this.browserStream = new BrowserStream(this.config);
   }
 
   async start() {
+    await this.config.make();
+
     for (let cam of this.config.cams) {
       this.startRtmpCamServer(cam);
     }
