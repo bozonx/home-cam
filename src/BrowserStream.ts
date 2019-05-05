@@ -32,8 +32,8 @@ export default class BrowserStream {
   /**
    * fs someone connected to streamPath
    */
-  hasAnyConnected(): boolean {
-    return !_.isEmpty(this.connectedClients);
+  hasAnyConnected(streamPath: string): boolean {
+    return !_.isEmpty(this.connectedClients[streamPath]);
   }
 
   start() {

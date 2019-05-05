@@ -24,23 +24,46 @@ export default class Main {
     // TODO: запускать только если хоть у одной камеры используется browser stream
     await this.browserStream.start();
 
-    for (let cam of this.config.cams) {
-      await this.startRtmpCamServer(cam);
-    }
+    this.browserStream.onOpenConnection(this.handleBrowserOpenConnection)
+    this.browserStream.onCloseConnection(this.handleBrowserCloseConnection)
+
+    // for (let cam of this.config.cams) {
+    //   await this.startRtmpCamServer(cam);
+    // }
   }
 
 
   destroy() {
-    for (let ffmpeg of Object.keys(this.rtmpInstances)) {
-      this.rtmpInstances[ffmpeg].destroy();
-      delete this.rtmpInstances[ffmpeg]
+    for (let camName of Object.keys(this.rtmpInstances)) {
+      // this.rtmpInstances[ffmpeg].destroy();
+      // delete this.rtmpInstances[ffmpeg]
+
+      this.stopRtmpCamServer(camName);
     }
 
     this.browserStream.destroy();
   }
 
 
-  async startRtmpCamServer(cam: CamConfig) {
+  private async handleBrowserOpenConnection(streamPath: string, id: string) {
+    // TODO: make
+    const camName: string = '';
+
+
+    // TODO: handle error
+    // TODO: find cam by camName
+    await this.startRtmpCamServer(this.config.cams[camName]);
+  }
+
+  private handleBrowserCloseConnection(streamPath: string, id: string) {
+    const anyConnected: boolean = this.browserStream.hasAnyConnected(streamPath);
+    // TODO: make
+    const camName: string = '';
+
+    this.stopRtmpCamServer(camName);
+  }
+
+  private async startRtmpCamServer(cam: CamConfig) {
     // Works only with reconverting a codec
     // ffmpeg -i "rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
     // ffmpeg -i "rtsp://192.168.88.6:554/user=admin&password=&channel=1&stream=0.sdp" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
@@ -66,6 +89,13 @@ export default class Main {
 
     await this.rtmpInstances[cam.name].start();
     this.rtmpInstances[cam.name].onError(console.error)
+  }
+
+  private stopRtmpCamServer(camName: string) {
+    if (!this.rtmpInstances[camName]) return;
+
+    this.rtmpInstances[camName].destroy();
+    delete this.rtmpInstances[camName];
   }
 
 }
