@@ -8,7 +8,6 @@ export interface StreamParams {
 }
 
 export interface CamConfig {
-  name: string;
   src: {
     // one of supported src protocols
     protocol: SrcProtocols;
@@ -53,7 +52,7 @@ export interface CommonServerConfig {
 
 
 export default interface MainConfig {
-  cams: CamConfig[];
+  cams: {[index: string]: CamConfig};
   // Default port is 8081
   browserStreamServer: CommonServerConfig;
   // Default port is 554

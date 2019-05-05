@@ -52,7 +52,7 @@ export default class Main {
 
     // TODO: handle error
     // TODO: find cam by camName
-    await this.startRtmpCamServer(this.config.cams[camName]);
+    await this.startRtmpCamServer(camName);
   }
 
   private handleBrowserCloseConnection(streamPath: string, id: string) {
@@ -63,7 +63,8 @@ export default class Main {
     this.stopRtmpCamServer(camName);
   }
 
-  private async startRtmpCamServer(cam: CamConfig) {
+  private async startRtmpCamServer(camName: string) {
+    const cam: CamConfig = this.config.cams[camName];
     // Works only with reconverting a codec
     // ffmpeg -i "rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
     // ffmpeg -i "rtsp://192.168.88.6:554/user=admin&password=&channel=1&stream=0.sdp" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
@@ -72,11 +73,11 @@ export default class Main {
     //ffmpeg -re -i /home/ivan/Downloads/test.mp4 -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv rtmp://localhost/live/cam0
 
     const srcUrl = makeUrl(cam.src.protocol, cam.src.host, cam.src.port, cam.src.url, cam.src.user, cam.src.password);
-    const dsrUrl = `"rtmp://localhost/live/${cam.name}"`;
+    const dsrUrl = `"rtmp://localhost/live/${camName}"`;
 
     console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to "${dsrUrl}"`);
 
-    this.rtmpInstances[cam.name] = new Ffmpeg({
+    this.rtmpInstances[camName] = new Ffmpeg({
       'i': `"${srcUrl}"`,
       'c:v': 'libx264',
       'preset': 'superfast',
@@ -87,8 +88,8 @@ export default class Main {
       [dsrUrl]: undefined,
     });
 
-    await this.rtmpInstances[cam.name].start();
-    this.rtmpInstances[cam.name].onError(console.error)
+    await this.rtmpInstances[camName].start();
+    this.rtmpInstances[camName].onError(console.error)
   }
 
   private stopRtmpCamServer(camName: string) {

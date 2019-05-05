@@ -7,7 +7,7 @@ import systemConfig from './systemConfig';
 
 
 export default class Config {
-  get cams(): CamConfig[] {
+  get cams(): {[index: string]: CamConfig} {
     return (this.config as any).cams;
   }
   get browserStreamServer(): CommonServerConfig {
