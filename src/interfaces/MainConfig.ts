@@ -1,7 +1,7 @@
 type SrcProtocols = 'rtsp';
 
 
-interface CamConfig {
+export interface CamConfig {
   name: string;
   src: {
     // one of supported src protocols

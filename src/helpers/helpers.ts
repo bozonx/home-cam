@@ -12,3 +12,17 @@ export function callPromised(method: Function, ...params: any[]): Promise<any> {
   });
 }
 
+export function makeUrl(
+  protocol: string,
+  host: string,
+  port?: number,
+  url?: string,
+  user?: string,
+  password?: string
+): string {
+  let result = protocol + '://';
+
+  result += [host, port].join(':');
+
+  return result;
+}
