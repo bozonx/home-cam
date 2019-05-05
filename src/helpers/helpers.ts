@@ -33,3 +33,26 @@ export function makeUrl(
 
   return result;
 }
+
+/**
+ * Split last part of path. 'path/to/dest' => [ 'dest', 'path/to' ]
+ */
+export function splitLastElement(
+  fullPath: string,
+  separator: string
+): [ string, string | undefined ] {
+  if (!fullPath) throw new Error(`fullPath param is required`);
+  if (!separator) throw new Error(`separator is required`);
+
+  const split = fullPath.split(separator);
+  const last: string = split[split.length - 1];
+
+  if (split.length === 1) {
+    return [ fullPath, undefined ];
+  }
+
+  // remove last element from path
+  split.pop();
+
+  return [ last, split.join(separator) ];
+}

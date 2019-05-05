@@ -2,7 +2,7 @@ import Config from './Config';
 import BrowserStream from './BrowserStream';
 import {CamConfig} from './interfaces/MainConfig';
 import Ffmpeg from './Ffmpeg';
-import {makeUrl} from './helpers/helpers';
+import {makeUrl, splitLastElement} from './helpers/helpers';
 import systemConfig from './systemConfig';
 
 
@@ -21,11 +21,10 @@ export default class Main {
   async start() {
     await this.config.make();
 
-    // TODO: запускать только если хоть у одной камеры используется browser stream
     await this.browserStream.start();
 
-    this.browserStream.onOpenConnection(this.handleBrowserOpenConnection)
-    this.browserStream.onCloseConnection(this.handleBrowserCloseConnection)
+    this.browserStream.onOpenConnection(this.handleBrowserOpenConnection);
+    this.browserStream.onCloseConnection(this.handleBrowserCloseConnection);
 
     // for (let cam of this.config.cams) {
     //   await this.startRtmpCamServer(cam);
@@ -46,21 +45,28 @@ export default class Main {
 
 
   private async handleBrowserOpenConnection(streamPath: string, id: string) {
-    // TODO: make
-    const camName: string = '';
+    const camName: string = splitLastElement(streamPath, '/')[0];
 
+    console.info(`===> Starting ffmpeg's rtmp stream for camera "${camName}"`);
 
-    // TODO: handle error
-    // TODO: find cam by camName
-    await this.startRtmpCamServer(camName);
+    try {
+      await this.startRtmpCamServer(camName);
+    }
+    catch (err) {
+      console.error(err);
+    }
   }
 
   private handleBrowserCloseConnection(streamPath: string, id: string) {
     const anyConnected: boolean = this.browserStream.hasAnyConnected(streamPath);
-    // TODO: make
-    const camName: string = '';
 
-    this.stopRtmpCamServer(camName);
+    if (!anyConnected) {
+      const camName: string = splitLastElement(streamPath, '/')[0];
+
+      console.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
+
+      this.stopRtmpCamServer(camName);
+    }
   }
 
   private async startRtmpCamServer(camName: string) {
