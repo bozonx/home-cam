@@ -31,49 +31,39 @@ export interface CamConfig {
     // Make image if someone is viewing it. In seconds
     updateInterval: 5
   };
-  // client and server params
-  rtmp: {
-    port: number;
-    chunk_size: number,
-    gop_cache: boolean,
-    ping: number,
-    ping_timeout: number;
-  };
+
+}
+
+export interface RtmpConfig {
+  port: number;
+  chunk_size: number,
+  gop_cache: boolean,
+  ping: number,
+  ping_timeout: number;
+}
+
+export interface CommonServerConfig {
+  // host to listen to. Default is 0.0.0.0
+  host: string;
+  // port to listen to
+  port?: number;
+  // user for basic auth
+  user?: string;
+  // password for basic auth
+  password?: string;
 }
 
 
 export default interface MainConfig {
   cams: CamConfig[];
-  browserStreamServer: {
-    // host to listen to. Default is 0.0.0.0
-    host: string;
-    // port to listen to. Default is 8081
-    port?: number;
-    // user for basic auth
-    user?: string;
-    // password for basic auth
-    password?: string;
-  };
-  rtspStreamServer: {
-    // host to listen to. Default is 0.0.0.0
-    host: string;
-    // port to listen to. Default is 554
-    port?: number;
-    // user for basic auth
-    user?: string;
-    // password for basic auth
-    password?: string;
-  };
-  staticServer: {
-    // host to listen to. Default is 0.0.0.0
-    host: string;
-    // port to listen to. Default is 8081
-    port?: number;
-    // user for basic auth
-    user?: string;
-    // password for basic auth
-    password?: string;
-  };
+  // Default port is 8081
+  browserStreamServer: CommonServerConfig;
+  // Default port is 554
+  rtspStreamServer: CommonServerConfig;
+  // Default port is 8081
+  staticServer: CommonServerConfig;
+  // client and server params
+  rtmp: RtmpConfig;
 
   //camDefaults?: CamConfig;
   // serversDefaults: {

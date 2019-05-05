@@ -1,10 +1,20 @@
-import BrowserStream from './BrowserStream';
+import * as yargs from 'yargs';
+
+import Main from './Main';
 
 
-function start() {
-  const streamingServer: BrowserStream = new BrowserStream();
+async function start() {
+  const configPath: string | undefined = yargs.argv._[0];
 
-  streamingServer.start();
+  if (!configPath) {
+    console.error(`You have to specify a path to config`);
+    process.exit(2);
+  }
+
+  const main: Main = new Main(configPath);
+
+  await main.start();
 }
 
-start();
+start()
+  .catch((err) => console.error(err));

@@ -1,8 +1,6 @@
-import Config from './Config';
-
 const NodeMediaServer = require('node-media-server');
 
-// ffmpeg -re -i INPUT_FILE_NAME -c copy -f flv rtmp://localhost/live/STREAM_NAME
+import Config from './Config';
 
 
 export default class BrowserStream {
@@ -15,20 +13,20 @@ export default class BrowserStream {
 
 
   start() {
-    //this.startFfmpeg();
-
     const config = {
+      // TODO: set via config
       logType: 3,
-
       rtmp: {
-        port: 1935,
-        chunk_size: 60000,
-        gop_cache: true,
-        ping: 30,
-        ping_timeout: 60
+        ...this.config.rtmp
+        // port: 1935,
+        // chunk_size: 60000,
+        // gop_cache: true,
+        // ping: 30,
+        // ping_timeout: 60
       },
       http: {
-        port: 8000,
+        // TODO: set host ??? and other params
+        port: this.config.browserStreamServer.port,
         allow_origin: '*'
       },
 
@@ -44,7 +42,7 @@ export default class BrowserStream {
   }
 
   destroy() {
-
+    // TODO: !!!
   }
 
 }
