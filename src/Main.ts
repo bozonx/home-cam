@@ -1,16 +1,15 @@
 import Config from './Config';
 import BrowserStream from './BrowserStream';
-import {CamConfig} from './interfaces/MainConfig';
-import Ffmpeg from './Ffmpeg';
-import {makeUrl, splitLastElement} from './helpers/helpers';
+import {splitLastElement} from './helpers/helpers';
 import systemConfig from './systemConfig';
+import RtmpStream from './RtmpStream';
 
 
 export default class Main {
   readonly config: Config;
   readonly systemConfig = systemConfig;
   readonly browserStream: BrowserStream;
-  private readonly rtmpInstances: {[index: string]: Ffmpeg} = {};
+  private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
 
 
   constructor(configPath: string) {
@@ -74,30 +73,9 @@ export default class Main {
   }
 
   private async startRtmpStream(camName: string) {
-    const cam: CamConfig = this.config.cams[camName];
-    const srcUrl = makeUrl(
-      cam.src.protocol,
-      cam.src.host,
-      cam.src.port,
-      cam.src.url,
-      cam.src.user,
-      cam.src.password
-    );
-    const dstUrl = `"rtmp://localhost/live/${camName}"`;
-
-    console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to ${dstUrl}`);
-
-    // use ffmpeg params from cam config or use defaults
-    const ffmpegProps = cam.ffmpeg || this.systemConfig.ffmpegDefaults;
-
-    this.rtmpInstances[camName] = new Ffmpeg({
-      'i': `"${srcUrl}"`,
-      ...ffmpegProps,
-      [dstUrl]: undefined,
-    });
+    this.rtmpInstances[camName] = new RtmpStream(camName, this);
 
     await this.rtmpInstances[camName].start();
-    this.rtmpInstances[camName].onError(console.error)
   }
 
   private stopRtmpCamServer(camName: string) {
