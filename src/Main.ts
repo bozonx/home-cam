@@ -26,8 +26,8 @@ export default class Main {
     this.browserStream.onOpenConnection(this.handleBrowserOpenConnection);
     this.browserStream.onCloseConnection(this.handleBrowserCloseConnection);
 
-    // for (let cam of this.config.cams) {
-    //   await this.startRtmpCamServer(cam);
+    // for (let camName of Object.keys(this.config.cams)) {
+    //   await this.startRtmpCamServer(camName);
     // }
   }
 
@@ -44,7 +44,7 @@ export default class Main {
   }
 
 
-  private async handleBrowserOpenConnection(streamPath: string, id: string) {
+  private handleBrowserOpenConnection = async (streamPath: string, id: string) => {
     const camName: string = splitLastElement(streamPath, '/')[0];
 
     console.info(`===> Starting ffmpeg's rtmp stream for camera "${camName}"`);
@@ -57,7 +57,7 @@ export default class Main {
     }
   }
 
-  private handleBrowserCloseConnection(streamPath: string, id: string) {
+  private handleBrowserCloseConnection = (streamPath: string, id: string) => {
     const anyConnected: boolean = this.browserStream.hasAnyConnected(streamPath);
 
     if (!anyConnected) {
@@ -65,11 +65,15 @@ export default class Main {
 
       console.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
+      // TODO: use debounce
       this.stopRtmpCamServer(camName);
     }
   }
 
   private async startRtmpCamServer(camName: string) {
+    // don't run if it was started
+    if (this.rtmpInstances[camName]) return;
+
     const cam: CamConfig = this.config.cams[camName];
     // Works only with reconverting a codec
     // ffmpeg -i "rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
@@ -81,7 +85,7 @@ export default class Main {
     const srcUrl = makeUrl(cam.src.protocol, cam.src.host, cam.src.port, cam.src.url, cam.src.user, cam.src.password);
     const dsrUrl = `"rtmp://localhost/live/${camName}"`;
 
-    console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to "${dsrUrl}"`);
+    console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to ${dsrUrl}`);
 
     this.rtmpInstances[camName] = new Ffmpeg({
       'i': `"${srcUrl}"`,

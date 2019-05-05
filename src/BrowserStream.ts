@@ -114,7 +114,7 @@ export default class BrowserStream {
   }
 
 
-  private handlePreConnect(id: string, args: RequestArgs) {
+  private handlePreConnect = (id: string, args: RequestArgs) => {
     //this.connectedClients[]
     // id=212K9N2L args={"ip":"::1","method":"GET","streamPath":"/live/smallRoom","query":{}}
     // TODO: use postConnect
@@ -131,7 +131,7 @@ export default class BrowserStream {
     this.openConnectionEvents.emit(args.streamPath, id);
   }
 
-  private handleDoneConnect(id: string, args: RequestArgs) {
+  private handleDoneConnect = (id: string, args: RequestArgs) => {
     // remove this id
     this.connectedClients[args.streamPath] = _.pull(this.connectedClients[args.streamPath], id);
 

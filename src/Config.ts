@@ -33,8 +33,14 @@ export default class Config {
 
     this.validateConfig(preConfig);
 
+    const cams: {[index: string]: CamConfig} = {};
+
+    for (let camName of Object.keys(preConfig.cams)) {
+      cams[camName] = this.prepareCam(preConfig, preConfig.cams[camName]);
+    }
+
     this.config = {
-      cams: preConfig.cams.map((cam: CamConfig) => this.prepareCam(preConfig, cam)),
+      cams,
       browserStreamServer: this.prepareBrowserStreamServer(preConfig),
       rtmp: this.prepareRtmp(preConfig),
 
