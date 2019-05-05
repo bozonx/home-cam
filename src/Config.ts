@@ -30,11 +30,13 @@ export default class Config {
     this.config = {
       cams: preConfig.cams.map(this.prepareCam),
       browserStreamServer: this.prepareBrowserStreamServer(preConfig),
+      rtmp: this.prepareRtmp(preConfig),
+
       // TODO: prepare it
       rtspStreamServer: preConfig.rtspStreamServer,
       // TODO: prepare it
       staticServer: preConfig.staticServer,
-      rtmp: this.prepareRtmp(preConfig),
+
     }
   }
 
@@ -47,12 +49,12 @@ export default class Config {
     // TODO: make it
   }
 
-  private prepareBrowserStreamServer(preCam: CamConfig): CommonServerConfig {
+  private prepareBrowserStreamServer(preConfig: {[index: string]: any}): CommonServerConfig {
     // TODO: make it
   }
 
-  private prepareRtmp(preCam: CamConfig): RtmpConfig {
-
+  private prepareRtmp(preConfig: {[index: string]: any}): RtmpConfig {
+    // TODO: make it
   }
 
 }

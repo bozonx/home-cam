@@ -13,6 +13,8 @@ export default class Main {
 
   constructor(configPath: string) {
     this.config = new Config(configPath);
+
+    // TODO: make for each camera
     this.browserStream = new BrowserStream(this.config);
   }
 
@@ -21,6 +23,10 @@ export default class Main {
 
     for (let cam of this.config.cams) {
       this.startRtmpCamServer(cam);
+
+      if (cam.browserStream) {
+        // TODO: start browser stream
+      }
     }
   }
 
