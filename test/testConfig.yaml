@@ -13,6 +13,12 @@ camDefaults:
   src:
     protocol: rtsp
     user: admin
+#  ffmpeg:
+#    c:v: libx264
+#    preset: superfast
+#    tune: zerolatency
+#    c:a: aac
+#    ar: 44100
 
 serversDefaults:
   host: 0.0.0.0

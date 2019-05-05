@@ -28,7 +28,8 @@ export interface CamConfig {
     // Make image if someone is viewing it. In seconds
     updateInterval: 5
   };
-
+  // options for ffmpeg RTMP stream. If isn't set then default compression will be used
+  ffmpeg?: {[index: string]: any},
 }
 
 export interface RtmpConfig {

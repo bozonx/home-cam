@@ -87,16 +87,12 @@ export default class Main {
 
     console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to ${dstUrl}`);
 
-    // TODO: use params from cam config
+    // use ffmpeg params from cam config or use defaults
+    const ffmpegProps = cam.ffmpeg || this.systemConfig.ffmpegDefaults;
 
     this.rtmpInstances[camName] = new Ffmpeg({
       'i': `"${srcUrl}"`,
-      'c:v': 'libx264',
-      'preset': 'superfast',
-      'tune': 'zerolatency',
-      'c:a': 'aac',
-      'ar': 44100,
-      'f': 'flv',
+      ...ffmpegProps,
       [dstUrl]: undefined,
     });
 
