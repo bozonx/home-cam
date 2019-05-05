@@ -12,7 +12,9 @@
     var flvPlayer = flvjs.createPlayer({
       type: 'flv',
       //url: 'http://localhost:8000/live/cam0.flv'
-      url: 'ws://localhost:8000/live/cam0.flv'
+      //url: 'ws://localhost:8081/live/cam0.flv'
+      url: 'ws://localhost:8081/live/smallRoom.flv'
+      //url: 'ws://localhost:8081/live/doorEye.flv'
     });
     flvPlayer.attachMediaElement(videoElement);
     flvPlayer.load();

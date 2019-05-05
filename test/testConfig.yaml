@@ -1,15 +1,18 @@
 cams:
   - name: smallRoom
-    password: admin
-    host: 192.168.88.33
-    url: /cam/realmonitor?channel=main&subtype=1
+    src:
+      password: admin
+      host: 192.168.88.33
+      url: /cam/realmonitor?channel=main&subtype=1
   - name: doorEye
-    host: 192.168.88.6
-    url: /user=admin&password=&channel=1&stream=0.sdp
+    src:
+      host: 192.168.88.6
+      url: /user=admin&password=&channel=1&stream=0.sdp
 
 camDefaults:
-  protocol: rtsp
-  user: admin
+  src:
+    protocol: rtsp
+    user: admin
 
 serversDefaults:
   host: 0.0.0.0

@@ -27,15 +27,17 @@ export default class Ffmpeg {
     // TODO: read whereis - use abs path
 
     const params: string[] = this.makeParams(this.params);
-    // TODO: which use????
-    const cwd = undefined;
+    const cwd = process.cwd();
 
     this._proc = new RestartedProcess('ffmpeg', params, cwd, this.restartTimeout);
 
+    this._proc.start();
+
+    //this.proc.onStdOut((msg: string) => console.log(msg));
     this.proc.onError(this.errEvents.emit);
   }
 
-  onEror(cb: ErrorHandler) {
+  onError(cb: ErrorHandler) {
     this.errEvents.addListener(cb);
   }
 
@@ -55,7 +57,7 @@ export default class Ffmpeg {
         paramStr = `-${key} ${params[key]}`;
       }
       else {
-        paramStr = `-${key}`;
+        paramStr = key;
       }
 
       result.push(paramStr);

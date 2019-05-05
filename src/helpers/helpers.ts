@@ -24,8 +24,11 @@ export function makeUrl(
 ): string {
   let result = protocol + '://';
 
+  // user:password
   if (user) result += _.compact([user, password]).join(':') + '@';
+  // host:port
   result += _.compact([host, port]).join(':');
+  // url
   if (url) result += '/' + _.trimStart(url, '/');
 
   return result;
