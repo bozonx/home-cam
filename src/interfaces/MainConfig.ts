@@ -31,7 +31,14 @@ export interface CamConfig {
     // Make image if someone is viewing it. In seconds
     updateInterval: 5
   };
-
+  // client and server params
+  rtmp: {
+    port: number;
+    chunk_size: number,
+    gop_cache: boolean,
+    ping: number,
+    ping_timeout: number;
+  };
 }
 
 

@@ -1,7 +1,6 @@
 import Config from './Config';
 import BrowserStream from './BrowserStream';
 import {CamConfig} from './interfaces/MainConfig';
-import RestartedProcess from './RestartedProcess';
 import Ffmpeg from './Ffmpeg';
 import {makeUrl} from './helpers/helpers';
 
@@ -19,36 +18,19 @@ export default class Main {
   }
 
   async start() {
-
     for (let cam of this.config.cams) {
       this.startRtmpCamServer(cam);
     }
+  }
 
-    //   try {
-    //     const ffmpegProc = new ffmpeg('rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1');
-    //
-    //     ffmpegProc.then(function (video: any) {
-    //       console.log('The video is ready to be processed');
-    //       video
-    //       .setVideoCodec('libx264')
-    //       .addCommand('-f', 'flv')
-    //       .addCommand('-preset', 'superfast')
-    //       .addCommand('-tune', 'zerolatency')
-    //       .setAudioCodec('aac')
-    //       .setAudioFrequency(41)
-    //       .save('rtmp://localhost/live/cam0', function (error: Error, file: any) {
-    //           if (!error)
-    //             console.log('Video file: ' + file);
-    //
-    //         console.log(111111111, file)
-    //         });
-    //     }, function (err: Error) {
-    //       console.log('Error: ' + err);
-    //     });
-    //   } catch (e) {
-    //     console.log(e.code);
-    //     console.log(e.msg);
-    //   }
+
+  destroy() {
+    for (let ffmpeg of Object.keys(this.rtmpInstances)) {
+      this.rtmpInstances[ffmpeg].destroy();
+      delete this.rtmpInstances[ffmpeg]
+    }
+
+    this.browserStream.destroy();
   }
 
   /**

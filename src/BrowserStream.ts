@@ -43,4 +43,8 @@ export default class BrowserStream {
     nms.run();
   }
 
+  destroy() {
+
+  }
+
 }
