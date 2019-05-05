@@ -10,7 +10,7 @@ export default class Config {
   get cams(): CamConfig[] {
     return (this.config as any).cams;
   }
-  get browserStreamServer(): CommonServerConfig[] {
+  get browserStreamServer(): CommonServerConfig {
     return (this.config as any).browserStreamServer;
   }
   get rtmp(): RtmpConfig {
@@ -56,7 +56,7 @@ export default class Config {
   }
 
   private prepareBrowserStreamServer(preConfig: {[index: string]: any}): CommonServerConfig {
-    return _.defaultsDeep({}, preConfig.browserStreamServer, systemConfig.serversDefaults);
+    return _.defaultsDeep({}, preConfig.browserStreamServer, systemConfig.browserStreamServer);
   }
 
   private prepareRtmp(preConfig: {[index: string]: any}): RtmpConfig {

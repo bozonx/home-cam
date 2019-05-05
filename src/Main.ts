@@ -15,20 +15,17 @@ export default class Main {
 
   constructor(configPath: string) {
     this.config = new Config(configPath, this);
-
-    // TODO: make for each camera
     this.browserStream = new BrowserStream(this.config);
   }
 
   async start() {
     await this.config.make();
 
+    // TODO: запускать только если хоть у одной камеры используется browser stream
+    await this.browserStream.start();
+
     for (let cam of this.config.cams) {
       this.startRtmpCamServer(cam);
-
-      if (cam.browserStream) {
-        // TODO: start browser stream
-      }
     }
   }
 

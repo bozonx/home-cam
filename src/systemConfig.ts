@@ -11,8 +11,9 @@ const rtmpDefaults: RtmpConfig = {
 
 
 export default {
-  serversDefaults: {
+  browserStreamServer: {
     host: 'localhost',
+    port: 8081,
   },
   camDefaults: {
     src: {

@@ -44,7 +44,7 @@ export interface CommonServerConfig {
   // host to listen to. Default is 0.0.0.0
   host: string;
   // port to listen to
-  port?: number;
+  port: number;
   // user for basic auth
   user?: string;
   // password for basic auth
