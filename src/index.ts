@@ -7,7 +7,7 @@ async function start() {
   const configPath: string | undefined = yargs.argv._[0];
 
   if (!configPath) {
-    console.error(`You have to specify a path to config`);
+    console.error(`ERROR: You have to specify a path to config`);
     process.exit(2);
   }
 

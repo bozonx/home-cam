@@ -18,6 +18,7 @@ export default class Main {
     this.browserStream = new BrowserStream(this.config);
   }
 
+
   async start() {
     await this.config.make();
 
@@ -33,24 +34,26 @@ export default class Main {
 
 
   destroy() {
+    console.log(`--> closing ffmpeg RTMP streams`);
     for (let camName of Object.keys(this.rtmpInstances)) {
-      // this.rtmpInstances[ffmpeg].destroy();
-      // delete this.rtmpInstances[ffmpeg]
-
       this.stopRtmpCamServer(camName);
     }
 
+    console.log(`--> closing browser stream`);
     this.browserStream.destroy();
   }
 
 
-  private handleBrowserOpenConnection = async (streamPath: string, id: string) => {
+  private handleBrowserOpenConnection = async (streamPath: string) => {
     const camName: string = splitLastElement(streamPath, '/')[0];
 
-    console.info(`===> Starting ffmpeg's rtmp stream for camera "${camName}"`);
+    console.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
+
+    // don't run if it has been started previously
+    if (this.rtmpInstances[camName]) return;
 
     try {
-      await this.startRtmpCamServer(camName);
+      await this.startRtmpStream(camName);
     }
     catch (err) {
       console.error(err);
@@ -70,22 +73,21 @@ export default class Main {
     }
   }
 
-  private async startRtmpCamServer(camName: string) {
-    // don't run if it was started
-    if (this.rtmpInstances[camName]) return;
-
+  private async startRtmpStream(camName: string) {
     const cam: CamConfig = this.config.cams[camName];
-    // Works only with reconverting a codec
-    // ffmpeg -i "rtsp://admin:admin@192.168.88.33:554/cam/realmonitor?channel=main&subtype=1" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
-    // ffmpeg -i "rtsp://192.168.88.6:554/user=admin&password=&channel=1&stream=0.sdp" -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv "rtmp://localhost/live/cam0"
+    const srcUrl = makeUrl(
+      cam.src.protocol,
+      cam.src.host,
+      cam.src.port,
+      cam.src.url,
+      cam.src.user,
+      cam.src.password
+    );
+    const dstUrl = `"rtmp://localhost/live/${camName}"`;
 
-    // file:
-    //ffmpeg -re -i /home/ivan/Downloads/test.mp4 -c:v libx264 -preset superfast -tune zerolatency -c:a aac -ar 44100 -f flv rtmp://localhost/live/cam0
+    console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to ${dstUrl}`);
 
-    const srcUrl = makeUrl(cam.src.protocol, cam.src.host, cam.src.port, cam.src.url, cam.src.user, cam.src.password);
-    const dsrUrl = `"rtmp://localhost/live/${camName}"`;
-
-    console.info(`==> starting ffmpeg rtmp translator from "${srcUrl}" to ${dsrUrl}`);
+    // TODO: use params from cam config
 
     this.rtmpInstances[camName] = new Ffmpeg({
       'i': `"${srcUrl}"`,
@@ -95,7 +97,7 @@ export default class Main {
       'c:a': 'aac',
       'ar': 44100,
       'f': 'flv',
-      [dsrUrl]: undefined,
+      [dstUrl]: undefined,
     });
 
     await this.rtmpInstances[camName].start();

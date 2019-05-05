@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import MainConfig, {CamConfig, CommonServerConfig, RtmpConfig} from './interfaces/MainConfig';
 import Os from './helpers/Os';
 import Main from './Main';
-import systemConfig from './systemConfig';
 
 
 export default class Config {
@@ -58,15 +57,15 @@ export default class Config {
   }
 
   private prepareCam(preConfig: {[index: string]: any}, preCam: CamConfig): CamConfig {
-    return _.defaultsDeep({}, preCam, preConfig.camDefaults, systemConfig.camDefaults);
+    return _.defaultsDeep({}, preCam, preConfig.camDefaults, this.main.systemConfig.camDefaults);
   }
 
   private prepareBrowserStreamServer(preConfig: {[index: string]: any}): CommonServerConfig {
-    return _.defaultsDeep({}, preConfig.browserStreamServer, systemConfig.browserStreamServer);
+    return _.defaultsDeep({}, preConfig.browserStreamServer, this.main.systemConfig.browserStreamServer);
   }
 
   private prepareRtmp(preConfig: {[index: string]: any}): RtmpConfig {
-    return _.defaultsDeep({}, preConfig.rtmp, systemConfig.rtmpDefaults);
+    return _.defaultsDeep({}, preConfig.rtmp, this.main.systemConfig.rtmpDefaults);
   }
 
 }
