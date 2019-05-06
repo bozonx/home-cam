@@ -14,8 +14,7 @@ export default class RestartedProcess {
   private readonly restartTimeoutMs: number;
   private proc?: SpawnProcess;
   private restartTimeout: any;
-  private starting: boolean = false;
-  
+
 
   constructor(cmd: string, cwd?: string, restartTimeoutMs: number = DEFAULT_RESTART_TIMEOUT) {
     this.cmd = cmd;
@@ -28,7 +27,6 @@ export default class RestartedProcess {
   }
 
   destroy() {
-    //this.destroyInstance();
     clearTimeout(this.restartTimeout);
     this.stdoutEvents.removeAll();
     this.errorEvents.removeAll();
@@ -47,14 +45,11 @@ export default class RestartedProcess {
 
 
   private makeInstance = () => {
-
     // make new instance
     this.proc = new SpawnProcess(this.cmd, this.cwd);
     // listen events
     this.proc.onStdOut(this.stdoutEvents.emit);
     this.proc.onError(this.errorEvents.emit);
-    this.proc.onClose(this.handleProcClose);
-    this.starting = true;
 
     try {
       this.proc.start();
@@ -64,19 +59,22 @@ export default class RestartedProcess {
       this.errorEvents.emit(`RestartedProcess: ${err}`);
       // fully restart a process
       this.restart();
+
+      return;
     }
 
-    this.starting = false;
+    // if process closed as soon as it was started - restart it
+    if (this.proc.isClosed()) {
+      this.restart();
+
+      return;
+    }
+
+    // or if process is still running - listen closing event
+    this.proc.onClose(this.handleProcClose);
   }
 
   private handleProcClose = (code: number) => {
-    // do noting if if was called while process is starting
-    if (this.starting) return;
-    
-    // TODO: обработать случай если процесс выполнился и сразу закончился
-    // TODO: больше не стартовать если задестроенно - при дестрое инстанса может вызываться close
-
-
     if (code) {
       this.errorEvents.emit(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${code}"`)
     }
@@ -90,12 +88,5 @@ export default class RestartedProcess {
     // wait to restart
     this.restartTimeout = setTimeout(this.makeInstance, this.restartTimeoutMs);
   }
-
-  // private destroyInstance() {
-  //   this.stdoutEvents.removeAll();
-  //   this.errorEvents.removeAll();
-  //   if (this.proc) this.proc.destroy();
-  //   delete this.proc;
-  // }
 
 }

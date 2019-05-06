@@ -15,6 +15,7 @@ export default class SpawnProcess {
   private readonly cmd: string;
   private readonly cwd?: string;
   private spawnedCmd?: ChildProcess;
+  private closed: boolean = false;
 
 
   constructor(cmd: string, cwd?: string) {
@@ -50,7 +51,10 @@ export default class SpawnProcess {
     spawnedCmd.stderr.on('data', (data: Buffer) => {
       this.stderrEvents.emit(data.toString(ENCODE))
     });
-    spawnedCmd.on('close', this.closeEvents.emit);
+    spawnedCmd.on('close', (code: number) => {
+      this.closed = true;
+      this.closeEvents.emit(code);
+    });
   }
 
   destroy() {
@@ -62,6 +66,10 @@ export default class SpawnProcess {
     delete this.spawnedCmd;
   }
 
+
+  isClosed(): boolean {
+    return this.closed;
+  }
 
   onStdOut(cb: StdHandler) {
     this.stdoutEvents.addListener(cb);
