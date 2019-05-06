@@ -36,6 +36,10 @@ export default class Ffmpeg {
     this.proc.onError(this.stderrEvents.emit);
   }
 
+  onStdOut(cb: StdHandler) {
+    this.stdoutEvents.addListener(cb);
+  }
+
   onError(cb: StdHandler) {
     this.stderrEvents.addListener(cb);
   }

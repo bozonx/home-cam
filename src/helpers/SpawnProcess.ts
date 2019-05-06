@@ -13,14 +13,12 @@ export default class SpawnProcess {
   private readonly closeEvents = new IndexedEvents<CloseHandler>();
   private readonly cmd: string;
   private readonly cwd?: string;
-  private readonly params: string[];
   private spawnedCmd?: ChildProcess;
 
 
-  constructor(cmd: string, params: string[], cwd?: string) {
+  constructor(cmd: string, cwd?: string) {
     this.cmd = cmd;
     this.cwd = cwd;
-    this.params = params;
   }
 
 
@@ -31,17 +29,16 @@ export default class SpawnProcess {
       encoding: 'utf8',
     };
 
-    const cmd: string = `${this.cmd} ${this.params.join(' ')}`;
-    const spawnedCmd: ChildProcess | null = childProcess.spawn(cmd, options);
+    const spawnedCmd: ChildProcess | null = childProcess.spawn(this.cmd, options);
 
     if (!spawnedCmd) {
-      throw new Error(`Can't spawn a process: "${cmd}"`);
+      throw new Error(`Can't spawn a process: "${this.cmd}"`);
     }
     else if (!spawnedCmd.stdout) {
-      throw new Error(`No stdout of process: "${cmd}"`);
+      throw new Error(`No stdout of process: "${this.cmd}"`);
     }
     else if (!spawnedCmd.stderr) {
-      throw new Error(`No stderr of process: "${cmd}"`);
+      throw new Error(`No stderr of process: "${this.cmd}"`);
     }
 
     this.spawnedCmd = spawnedCmd;

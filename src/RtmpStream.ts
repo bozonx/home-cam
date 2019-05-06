@@ -27,9 +27,8 @@ export default class RtmpStream {
     // start stream
     await ffmpeg.start();
 
-
-    // TODO: print in debug mode
-
+    // print stdout in debug mode
+    ffmpeg.onStdOut(this.main.log.debug);
     // print stderr to console
     ffmpeg.onError(this.main.log.error)
   }

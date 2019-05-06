@@ -48,7 +48,8 @@ export default class RestartedProcess {
   private makeInstance = () => {
     if (this.proc) this.proc.destroy();
 
-    this.proc = new SpawnProcess(this.cmd, this.params, this.cwd);
+    const cmd: string = `${this.cmd} ${this.params.join(' ')}`;
+    this.proc = new SpawnProcess(cmd, this.cwd);
 
     this.proc.onStdOut(this.stdoutEvents.emit);
     this.proc.onError(this.stderrEvents.emit);
@@ -56,6 +57,7 @@ export default class RestartedProcess {
       // reconnect
 
       if (code) {
+        // TODO: use stderrEvents
         console.error(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${code}"`)
       }
 
@@ -72,6 +74,7 @@ export default class RestartedProcess {
 
       // TODO: отписаться
 
+      // TODO: use stderrEvents
       console.error(`RestartedProcess: ${err}`);
       // restart
       setTimeout(this.makeInstance, this.restartTimeout);
