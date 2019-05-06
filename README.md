@@ -95,4 +95,8 @@ base nodejs
 
     docker build -t base-nodejs:11 .
 
-    docker build -t home-cam .
+    docker build -t home-cam-server .
+
+Start
+
+    docker run --rm -it -e 8081:8081 -v ${PWD}/test/testConfig.yaml:/app/config.yaml:ro --name home-cam home-cam-server

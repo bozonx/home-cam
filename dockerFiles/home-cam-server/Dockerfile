@@ -4,7 +4,7 @@ FROM base-nodejs:11
 #LABEL maintainer "Gabriel Araujo <contact@gbiel.com>"
 
 ENV PRJ_NAME home-cam
-ENV WORKDIR /homecam
+ENV WORKDIR /app
 ENV REPO https://github.com/bozonx/${PRJ_NAME}.git
 ENV PATH $PATH:${WORKDIR}/${PRJ_NAME}
 
@@ -17,7 +17,8 @@ RUN cd ${WORKDIR} && git clone ${REPO}
 RUN cd ${WORKDIR}/${PRJ_NAME} && npm install -p
 # && npm cache clean
 
-CMD ["home-cam"]
+ENTRYPOINT ["home-cam"]
+CMD ["${WORKDIR}/config.yaml"]
 
 EXPOSE 8081
 
