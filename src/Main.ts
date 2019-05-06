@@ -5,6 +5,7 @@ import systemConfig from './systemConfig';
 import RtmpStream from './RtmpStream';
 import Logger from './interfaces/Logger';
 import LogLevel from './interfaces/LogLevel';
+import * as _ from 'lodash';
 
 
 export default class Main {
@@ -13,6 +14,7 @@ export default class Main {
   readonly systemConfig = systemConfig;
   readonly browserStream: BrowserStream;
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
+  private stopRtmpDebounce?: (cb: () => void) => void;
 
 
   constructor(
@@ -28,6 +30,7 @@ export default class Main {
 
   async start() {
     await this.config.make();
+    this.stopRtmpDebounce = _.debounce((cb: () => void) => cb(), this.config.config.rtmpStopDelay);
 
     await this.browserStream.start();
 
@@ -67,17 +70,20 @@ export default class Main {
     }
   }
 
-  private handleBrowserCloseConnection = (streamPath: string, id: string) => {
-    const anyConnected: boolean = this.browserStream.hasAnyConnected(streamPath);
+  private handleBrowserCloseConnection = (streamPath: string) => {
+    // don't stop if some else is connected
+    if (this.browserStream.hasAnyConnected(streamPath)) return;
 
-    if (!anyConnected) {
-      const camName: string = splitLastElement(streamPath, '/')[0];
+    const camName: string = splitLastElement(streamPath, '/')[0];
 
-      this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
+    this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
-      // TODO: use debounce
+    this.stopRtmpDebounce && this.stopRtmpDebounce(() => {
+      // don't stop if someone ans been connected while it wait
+      if (this.browserStream.hasAnyConnected(streamPath)) return;
+
       this.stopRtmpCamServer(camName);
-    }
+    });
   }
 
   private async startRtmpStream(camName: string) {
