@@ -91,4 +91,8 @@ Available urls
 
 ## Make docker container
 
+base nodejs
+
+    docker build -t base-nodejs:11 .
+
     docker build -t home-cam .
