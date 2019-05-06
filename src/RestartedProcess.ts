@@ -42,24 +42,18 @@ export default class RestartedProcess {
   }
 
 
+  // TODO: больше не стартовать если задестроенно
+
   private makeInstance = () => {
+    // destroy previous instance if exist
     if (this.proc) this.proc.destroy();
 
+    // make new instance
     this.proc = new SpawnProcess(this.cmd, this.cwd);
+    // listen events
     this.proc.onStdOut(this.stdoutEvents.emit);
     this.proc.onError(this.stderrEvents.emit);
-    this.proc.onClose((code: number) => {
-      // reconnect
-
-      if (code) {
-        // TODO: use stderrEvents
-        console.error(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${code}"`)
-      }
-
-      // restart
-      setTimeout(this.makeInstance, this.restartTimeout);
-    });
-
+    this.proc.onClose(this.handleProcClose);
 
     // TODO: review
     try {
@@ -75,6 +69,18 @@ export default class RestartedProcess {
       setTimeout(this.makeInstance, this.restartTimeout);
     }
 
+  }
+
+  private handleProcClose = (code: number) => {
+    // reconnect
+
+    if (code) {
+      // TODO: use stderrEvents
+      console.error(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${code}"`)
+    }
+
+    // restart
+    setTimeout(this.makeInstance, this.restartTimeout);
   }
 
 }
