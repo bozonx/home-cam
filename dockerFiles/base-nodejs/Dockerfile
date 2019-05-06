@@ -1,8 +1,6 @@
 # Pull base image.
 FROM node:11
 
-#LABEL maintainer "Gabriel Araujo <contact@gbiel.com>"
-
 # Install dependencies
 RUN apt-get -yqq update && \
 #    apt-get install -yqq -t jessie-backports openjdk-8-jre-headless ca-certificates-java && \

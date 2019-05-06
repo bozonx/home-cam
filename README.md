@@ -91,12 +91,19 @@ Available urls
 
 ## Make docker container
 
-base nodejs
+Development images - base-nodejs and home-cam-server-dev
 
     docker build -t base-nodejs:11 .
+    docker build -t home-cam-server .
+
+Prod image - home-cam-server
 
     docker build -t home-cam-server .
 
 Start
 
     docker run --rm -it -p 8081:8081 -v ${PWD}/test/testConfig.yaml:/app/config.yaml:ro --name home-cam home-cam-server
+
+Install on raspberry ip
+
+    curl -s 
