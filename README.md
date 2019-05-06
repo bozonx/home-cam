@@ -99,4 +99,4 @@ base nodejs
 
 Start
 
-    docker run --rm -it -e 8081:8081 -v ${PWD}/test/testConfig.yaml:/app/config.yaml:ro --name home-cam home-cam-server
+    docker run --rm -it -p 8081:8081 -v ${PWD}/test/testConfig.yaml:/app/config.yaml:ro --name home-cam home-cam-server

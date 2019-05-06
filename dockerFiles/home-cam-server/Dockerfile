@@ -17,8 +17,9 @@ RUN cd ${WORKDIR} && git clone ${REPO}
 RUN cd ${WORKDIR}/${PRJ_NAME} && npm install -p
 # && npm cache clean
 
-ENTRYPOINT ["home-cam"]
-CMD ["${WORKDIR}/config.yaml"]
+ENTRYPOINT home-cam ${WORKDIR}/config.yaml
+#ENTRYPOINT ["home-cam"]
+#CMD ["${WORKDIR}/config.yaml"]
 
 EXPOSE 8081
 
