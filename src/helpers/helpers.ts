@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import LogLevel, {LOG_LEVELS} from '../interfaces/LogLevel';
 
 
 /**
@@ -55,4 +56,13 @@ export function splitLastElement(
   split.pop();
 
   return [ last, split.join(separator) ];
+}
+
+/**
+ * Makes ['info', 'warn', 'error'] if log level is 'info'
+ */
+export function calcAllowedLogLevels(logLevel: LogLevel): LogLevel[] {
+  const currentLevelIndex: number = LOG_LEVELS.indexOf(logLevel);
+
+  return LOG_LEVELS.slice(currentLevelIndex) as LogLevel[];
 }

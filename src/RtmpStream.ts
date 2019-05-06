@@ -17,7 +17,7 @@ export default class RtmpStream {
 
 
   async start() {
-    const ffmpegParams = this.makeFrmpegParams();
+    const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
 
     console.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
 

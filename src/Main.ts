@@ -3,17 +3,21 @@ import BrowserStream from './BrowserStream';
 import {splitLastElement} from './helpers/helpers';
 import systemConfig from './systemConfig';
 import RtmpStream from './RtmpStream';
+import Logger from './interfaces/Logger';
+import LogLevel from './interfaces/LogLevel';
 
 
 export default class Main {
   readonly config: Config;
+  readonly log: Logger;
   readonly systemConfig = systemConfig;
   readonly browserStream: BrowserStream;
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
 
 
-  constructor(configPath: string) {
+  constructor(configPath: string, LoggerClass: new (logLevel: LogLevel) => Logger) {
     this.config = new Config(configPath, this);
+    this.log = new LoggerClass();
     this.browserStream = new BrowserStream(this.config);
   }
 
