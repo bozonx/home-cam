@@ -106,4 +106,5 @@ Start
 
 Install on raspberry ip
 
-    curl -s 
+    curl -s https://raw.githubusercontent.com/bozonx/home-cam/master/dockerFiles/home-cam-server/Dockerfile | docker build -t home-cam-server -
+    
