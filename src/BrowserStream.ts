@@ -1,9 +1,9 @@
-import IndexedEvents from './helpers/IndexedEvents';
-
-const NodeMediaServer = require('node-media-server');
-
-import Config from './Config';
 import * as _ from 'lodash';
+
+import IndexedEvents from './helpers/IndexedEvents';
+import Config from './Config';
+import MediaServer from './helpers/MediaServer';
+import Main from './Main';
 
 
 type ConnectionHandler = (streamPath: string, id: string) => void;
@@ -21,11 +21,23 @@ export default class BrowserStream {
   private readonly closeConnectionEvents = new IndexedEvents<ConnectionHandler>();
   // like {'/live/smallRoom': ['QNRY4FDA']}
   private readonly connectedClients: {[index: string]: string[]} = {};
-  private readonly config: Config;
+  private readonly main: Main;
+  private readonly mediaServer: MediaServer;
 
 
-  constructor(config: Config) {
-    this.config = config;
+  constructor(main: Main) {
+    this.main = main;
+    this.mediaServer = new MediaServer(
+      this.main.log.logLevel,
+      this.main.config.rtmp,
+      {
+        // TODO: set host ??? and other params
+        port: this.main.config.browserStreamServer.port,
+        allow_origin: '*'
+      }
+    );
+
+    // TODO: add listeners
   }
 
 
@@ -36,73 +48,12 @@ export default class BrowserStream {
     return !_.isEmpty(this.connectedClients[streamPath]);
   }
 
-  start() {
-    const config = {
-      // TODO: set via config
-      /*
-      0 - Don't log anything
-      1 - Log errors
-      2 - Log errors and generic info
-      3 - Log everything (debug)
-       */
-      logType: 3,
-      rtmp: {
-        ...this.config.rtmp
-      },
-      http: {
-        // TODO: set host ??? and other params
-        port: this.config.browserStreamServer.port,
-        allow_origin: '*'
-      },
-
-      // auth: {
-      //   play: true,
-      //   publish: true,
-      //   secret: 'nodemedia2017privatekey'
-      // }
-    };
-
-    var nms = new NodeMediaServer(config);
-    nms.run();
-
-    nms.on('preConnect', this.handlePreConnect);
-    nms.on('doneConnect', this.handleDoneConnect);
-
-    // nms.on('postConnect', (id: string, args: RequestArgs) => {
-    //   console.log('[NodeEvent on postConnect]', `id=${id} args=${JSON.stringify(args)}`);
-    // });
-
-    // nms.on('prePublish', (id: string, StreamPath: string, args: {[index: string]: any}) => {
-    //   console.log('[NodeEvent on prePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    //   // let session = nms.getSession(id);
-    //   // session.reject();
-    // });
-    //
-    // nms.on('postPublish', (id: string, StreamPath: string, args: {[index: string]: any}) => {
-    //   console.log('[NodeEvent on postPublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    // });
-    //
-    // nms.on('donePublish', (id: string, StreamPath: string, args: {[index: string]: any}) => {
-    //   console.log('[NodeEvent on donePublish]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    // });
-    //
-    // nms.on('prePlay', (id: string, StreamPath: string, args: {[index: string]: any}) => {
-    //   console.log('[NodeEvent on prePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    //   // let session = nms.getSession(id);
-    //   // session.reject();
-    // });
-    //
-    // nms.on('postPlay', (id: string, StreamPath: string, args: {[index: string]: any}) => {
-    //   console.log('[NodeEvent on postPlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    // });
-    //
-    // nms.on('donePlay', (id: string, StreamPath: string, args: {[index: string]: any}) => {
-    //   console.log('[NodeEvent on donePlay]', `id=${id} StreamPath=${StreamPath} args=${JSON.stringify(args)}`);
-    // });
+  async start() {
+    this.mediaServer.start();
   }
 
   destroy() {
-    // TODO: !!!
+    this.mediaServer.destroy();
   }
 
   onOpenConnection(cb: ConnectionHandler) {
