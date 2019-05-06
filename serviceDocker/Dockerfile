@@ -4,7 +4,7 @@ FROM node:11
 #LABEL maintainer "Gabriel Araujo <contact@gbiel.com>"
 
 ENV PRJ_NAME home-cam
-ENV REPO git@github.com:bozonx/${PRJ_NAME}.git
+ENV REPO https://github.com/bozonx/${PRJ_NAME}.git
 ENV WORKDIR /homecam
 ENV PATH $PATH:${WORKDIR}/${PRJ_NAME}
 
@@ -26,8 +26,7 @@ RUN cd ${WORKDIR}/${PRJ_NAME} && npm install -p && npm cache clean
 
 CMD ["home-cam"]
 
-#пробрасываем порт вашей программы наружу образа
-EXPOSE 8000
+EXPOSE 8081
 
 
 #RUN echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list && \

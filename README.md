@@ -87,3 +87,8 @@ Available urls
 Available urls
 
 * /cams/${camName} - streams for external recording
+
+
+## Make docker container
+
+    docker build -t home-cam .
