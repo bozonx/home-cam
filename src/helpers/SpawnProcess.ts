@@ -15,7 +15,7 @@ export default class SpawnProcess {
   private readonly cmd: string;
   private readonly cwd?: string;
   private spawnedCmd?: ChildProcess;
-  private closed: boolean = false;
+  private closeCode?: number;
 
 
   constructor(cmd: string, cwd?: string) {
@@ -52,7 +52,7 @@ export default class SpawnProcess {
       this.stderrEvents.emit(data.toString(ENCODE))
     });
     spawnedCmd.on('close', (code: number) => {
-      this.closed = true;
+      this.closeCode = code;
       this.closeEvents.emit(code);
     });
   }
@@ -67,8 +67,8 @@ export default class SpawnProcess {
   }
 
 
-  isClosed(): boolean {
-    return this.closed;
+  getCloseCode(): number | undefined {
+    return this.closeCode;
   }
 
   onStdOut(cb: StdHandler) {

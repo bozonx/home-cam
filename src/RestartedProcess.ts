@@ -56,7 +56,7 @@ export default class RestartedProcess {
     }
     catch (err) {
       // print error
-      this.errorEvents.emit(`RestartedProcess: ${err}`);
+      this.errorEvents.emit(`RestartedProcess: can't start a process: "${this.cmd}": ${err}`);
       // fully restart a process
       this.restart();
 
@@ -64,7 +64,8 @@ export default class RestartedProcess {
     }
 
     // if process closed as soon as it was started - restart it
-    if (this.proc.isClosed()) {
+    if (typeof this.proc.getCloseCode() !== 'undefined') {
+      this.errorEvents.emit(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${this.proc.getCloseCode()}"`)
       this.restart();
 
       return;
