@@ -19,15 +19,19 @@ export default class RtmpStream {
   async start() {
     const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
 
-    console.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
+    this.main.log.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
 
     const ffmpeg = new Ffmpeg(ffmpegParams);
 
     this.ffmpeg = ffmpeg;
     // start stream
     await ffmpeg.start();
+
+
+    // TODO: print in debug mode
+
     // print stderr to console
-    ffmpeg.onError(console.error)
+    ffmpeg.onError(this.main.log.error)
   }
 
   destroy() {

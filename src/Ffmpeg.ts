@@ -1,12 +1,11 @@
 import RestartedProcess from './RestartedProcess';
 import IndexedEvents from './helpers/IndexedEvents';
-
-
-type ErrorHandler = (err: string) => void;
+import {StdHandler} from './helpers/SpawnProcess';
 
 
 export default class Ffmpeg {
-  private readonly errEvents = new IndexedEvents<ErrorHandler>();
+  private readonly stdoutEvents = new IndexedEvents<StdHandler>();
+  private readonly stderrEvents = new IndexedEvents<StdHandler>();
   private readonly params: {[index: string]: any};
   private readonly restartTimeout?: number;
   private _proc?: RestartedProcess;
@@ -33,14 +32,12 @@ export default class Ffmpeg {
 
     this._proc.start();
 
-    // TODO: print in debug mode
-
-    //this.proc.onStdOut((msg: string) => console.log(msg));
-    this.proc.onError(this.errEvents.emit);
+    this.proc.onStdOut(this.stdoutEvents.emit);
+    this.proc.onError(this.stderrEvents.emit);
   }
 
-  onError(cb: ErrorHandler) {
-    this.errEvents.addListener(cb);
+  onError(cb: StdHandler) {
+    this.stderrEvents.addListener(cb);
   }
 
   destroy() {

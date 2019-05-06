@@ -15,9 +15,13 @@ export default class Main {
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
 
 
-  constructor(configPath: string, LoggerClass: new (logLevel: LogLevel) => Logger) {
+  constructor(
+    configPath: string,
+    LoggerClass: new (logLevel: LogLevel) => Logger,
+    logLevel: LogLevel = 'info'
+  ) {
     this.config = new Config(configPath, this);
-    this.log = new LoggerClass();
+    this.log = new LoggerClass(logLevel);
     this.browserStream = new BrowserStream(this.config);
   }
 
@@ -37,12 +41,12 @@ export default class Main {
 
 
   destroy() {
-    console.log(`--> closing ffmpeg RTMP streams`);
+    this.log.info(`--> closing ffmpeg RTMP streams`);
     for (let camName of Object.keys(this.rtmpInstances)) {
       this.stopRtmpCamServer(camName);
     }
 
-    console.log(`--> closing browser stream`);
+    this.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
   }
 
@@ -50,7 +54,7 @@ export default class Main {
   private handleBrowserOpenConnection = async (streamPath: string) => {
     const camName: string = splitLastElement(streamPath, '/')[0];
 
-    console.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
+    this.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
 
     // don't run if it has been started previously
     if (this.rtmpInstances[camName]) return;
@@ -59,7 +63,7 @@ export default class Main {
       await this.startRtmpStream(camName);
     }
     catch (err) {
-      console.error(err);
+      this.log.error(err);
     }
   }
 
@@ -69,7 +73,7 @@ export default class Main {
     if (!anyConnected) {
       const camName: string = splitLastElement(streamPath, '/')[0];
 
-      console.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
+      this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
       // TODO: use debounce
       this.stopRtmpCamServer(camName);

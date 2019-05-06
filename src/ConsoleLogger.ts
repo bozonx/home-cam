@@ -17,25 +17,25 @@ export default class ConsoleLogger {
   }
 
 
-  debug(message: string) {
+  debug = (message: string) => {
     if (this.logLevel === 'debug') return;
 
     console.info(message);
   }
 
-  info(message: string) {
+  info = (message: string) => {
     if (!this.isAllowedInfo) return;
 
     console.info(message);
   }
 
-  warn(message: string) {
+  warn = (message: string) => {
     if (!this.isAllowedWarn) return;
 
     console.warn(`WARNING: ${message}`);
   }
 
-  error(message: string) {
+  error = (message: string) => {
     console.error(`ERROR: ${message}`);
   }
 
