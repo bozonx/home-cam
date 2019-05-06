@@ -22,7 +22,7 @@ export default class Main {
   ) {
     this.config = new Config(configPath, this);
     this.log = new LoggerClass(logLevel);
-    this.browserStream = new BrowserStream(this.config);
+    this.browserStream = new BrowserStream(this);
   }
 
 

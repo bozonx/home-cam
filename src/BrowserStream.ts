@@ -1,19 +1,11 @@
 import * as _ from 'lodash';
 
 import IndexedEvents from './helpers/IndexedEvents';
-import Config from './Config';
-import MediaServer from './helpers/MediaServer';
+import MediaServer, {RequestArgs} from './helpers/MediaServer';
 import Main from './Main';
 
 
 type ConnectionHandler = (streamPath: string, id: string) => void;
-
-interface RequestArgs {
-  ip: string;
-  method: string;
-  streamPath: string;
-  query: {[index: string]: any},
-}
 
 
 export default class BrowserStream {
@@ -37,15 +29,8 @@ export default class BrowserStream {
       }
     );
 
-    // TODO: add listeners
-  }
-
-
-  /**
-   * fs someone connected to streamPath
-   */
-  hasAnyConnected(streamPath: string): boolean {
-    return !_.isEmpty(this.connectedClients[streamPath]);
+    this.mediaServer.onPreConnect(this.handlePreConnect);
+    this.mediaServer.onDoneConnect(this.handleDoneConnect);
   }
 
   async start() {
@@ -54,6 +39,14 @@ export default class BrowserStream {
 
   destroy() {
     this.mediaServer.destroy();
+  }
+
+
+  /**
+   * fs someone connected to streamPath
+   */
+  hasAnyConnected(streamPath: string): boolean {
+    return !_.isEmpty(this.connectedClients[streamPath]);
   }
 
   onOpenConnection(cb: ConnectionHandler) {
@@ -66,15 +59,7 @@ export default class BrowserStream {
 
 
   private handlePreConnect = (id: string, args: RequestArgs) => {
-    //this.connectedClients[]
-    // id=212K9N2L args={"ip":"::1","method":"GET","streamPath":"/live/smallRoom","query":{}}
-    // TODO: use postConnect
-    //console.log('[NodeEvent on preConnect]', `id=${id} args=${JSON.stringify(args)}`);
-    // let session = nms.getSession(id);
-    // session.reject();
-
     if (!args.streamPath) return;
-
     if (!this.connectedClients[args.streamPath]) this.connectedClients[args.streamPath] = [];
 
     this.connectedClients[args.streamPath].push(id);
@@ -83,6 +68,8 @@ export default class BrowserStream {
   }
 
   private handleDoneConnect = (id: string, args: RequestArgs) => {
+    if (!args.streamPath) return;
+
     // remove this id
     this.connectedClients[args.streamPath] = _.pull(this.connectedClients[args.streamPath], id);
 
