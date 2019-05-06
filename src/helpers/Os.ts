@@ -4,7 +4,7 @@ import {ChildProcess} from "child_process";
 import * as yaml from 'js-yaml';
 import * as shelljs from 'shelljs';
 import {callPromised} from './helpers';
-import {FILES_ENCODE} from './constants';
+import {ENCODE} from './constants';
 
 
 export interface SpawnCmdResult {
@@ -17,7 +17,7 @@ export interface SpawnCmdResult {
 
 export default class Os {
   getFileContent(pathTo: string): Promise<string> {
-    return callPromised(fs.readFile, pathTo, FILES_ENCODE) as Promise<string>;
+    return callPromised(fs.readFile, pathTo, ENCODE) as Promise<string>;
   }
 
   async loadYamlFile(fullPath: string): Promise<{[index: string]: any}> {

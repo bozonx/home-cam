@@ -1,7 +1,7 @@
 import * as childProcess from 'child_process';
 import {ChildProcess} from "child_process";
 import IndexedEvents from './IndexedEvents';
-import {FILES_ENCODE} from './constants';
+import {ENCODE} from './constants';
 
 
 export type StdHandler = (msg: string) => void;
@@ -45,13 +45,23 @@ export default class SpawnProcess {
     this.spawnedCmd = spawnedCmd;
 
     spawnedCmd.stdout.on('data', (data: Buffer) => {
-      this.stdoutEvents.emit(data.toString(FILES_ENCODE))
+      this.stdoutEvents.emit(data.toString(ENCODE))
     });
     spawnedCmd.stderr.on('data', (data: Buffer) => {
-      this.stderrEvents.emit(data.toString(FILES_ENCODE))
+      this.stderrEvents.emit(data.toString(ENCODE))
     });
     spawnedCmd.on('close', this.closeEvents.emit);
   }
+
+  destroy() {
+    // remove all the listeners
+    this.stdoutEvents.removeAll();
+    this.stderrEvents.removeAll();
+    this.closeEvents.removeAll();
+    if (this.spawnedCmd) this.spawnedCmd.kill('SIGTERM');
+    delete this.spawnedCmd;
+  }
+
 
   onStdOut(cb: StdHandler) {
     this.stdoutEvents.addListener(cb);
@@ -64,15 +74,6 @@ export default class SpawnProcess {
   onClose(cb: (code: number) => void) {
     this.closeEvents.addListener(cb);
     this.destroy();
-  }
-
-  destroy() {
-    // remove all the listeners
-    this.stdoutEvents.removeAll();
-    this.stderrEvents.removeAll();
-    this.closeEvents.removeAll();
-    if (this.spawnedCmd) this.spawnedCmd.kill('SIGTERM');
-    delete this.spawnedCmd;
   }
 
 }
