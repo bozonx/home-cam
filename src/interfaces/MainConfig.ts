@@ -1,6 +1,10 @@
 type SrcProtocols = 'rtsp';
 
 
+export interface CommonConfig {
+  rtmpStopDelaySec: number;
+}
+
 export interface StreamParams {
   frameRate?: number;
   width?: number;
@@ -62,6 +66,7 @@ export default interface MainConfig {
   staticServer: CommonServerConfig;
   // client and server params
   rtmp: RtmpConfig;
+  config: CommonConfig;
 
   //camDefaults?: CamConfig;
   // serversDefaults: {

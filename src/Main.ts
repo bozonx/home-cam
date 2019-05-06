@@ -30,7 +30,10 @@ export default class Main {
 
   async start() {
     await this.config.make();
-    this.stopRtmpDebounce = _.debounce((cb: () => void) => cb(), this.config.config.rtmpStopDelay);
+    this.stopRtmpDebounce = _.debounce(
+      (cb: () => void) => cb(),
+      this.config.config.rtmpStopDelaySec * 1000
+    );
 
     await this.browserStream.start();
 
@@ -79,7 +82,7 @@ export default class Main {
     this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
     this.stopRtmpDebounce && this.stopRtmpDebounce(() => {
-      // don't stop if someone ans been connected while it wait
+      // don't stop if someone ans been connected while it waits
       if (this.browserStream.hasAnyConnected(streamPath)) return;
 
       this.stopRtmpCamServer(camName);

@@ -33,4 +33,8 @@ export default {
     'ar': 44100,
     'f': 'flv',
   },
+  // app config
+  config: {
+    rtmpStopDelaySec: 10,
+  }
 };

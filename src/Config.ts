@@ -1,21 +1,24 @@
 import * as _ from 'lodash';
 
-import MainConfig, {CamConfig, CommonServerConfig, RtmpConfig} from './interfaces/MainConfig';
+import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from './interfaces/MainConfig';
 import Os from './helpers/Os';
 import Main from './Main';
 
 
 export default class Config {
   get cams(): {[index: string]: CamConfig} {
-    return (this.config as any).cams;
+    return (this.mainConfig as any).cams;
   }
   get browserStreamServer(): CommonServerConfig {
-    return (this.config as any).browserStreamServer;
+    return (this.mainConfig as any).browserStreamServer;
   }
   get rtmp(): RtmpConfig {
-    return (this.config as any).rtmp;
+    return (this.mainConfig as any).rtmp;
   }
-  private config?: MainConfig;
+  get config(): CommonConfig {
+    return (this.mainConfig as any).config;
+  }
+  private mainConfig?: MainConfig;
   private readonly main: Main;
   private readonly os: Os = new Os();
   private readonly configPath: string;
@@ -38,7 +41,7 @@ export default class Config {
       cams[camName] = this.prepareCam(preConfig, preConfig.cams[camName]);
     }
 
-    this.config = {
+    this.mainConfig = {
       cams,
       browserStreamServer: this.prepareBrowserStreamServer(preConfig),
       rtmp: this.prepareRtmp(preConfig),
@@ -47,7 +50,7 @@ export default class Config {
       rtspStreamServer: preConfig.rtspStreamServer,
       // TODO: prepare it
       staticServer: preConfig.staticServer,
-
+      config: this.makeCommonConfig(preConfig),
     }
   }
 
@@ -66,6 +69,10 @@ export default class Config {
 
   private prepareRtmp(preConfig: {[index: string]: any}): RtmpConfig {
     return _.defaultsDeep({}, preConfig.rtmp, this.main.systemConfig.rtmpDefaults);
+  }
+
+  private makeCommonConfig(preConfig: {[index: string]: any}): CommonConfig {
+    return _.defaultsDeep({}, preConfig.config, this.main.systemConfig.config);
   }
 
 }
