@@ -17,8 +17,6 @@ export default class Ffmpeg {
   constructor(params: {[index: string]: any}, restartTimeout?: number) {
     this.params = params;
     this.restartTimeout = restartTimeout;
-
-
   }
 
   async start() {
@@ -27,8 +25,9 @@ export default class Ffmpeg {
 
     const params: string[] = this.makeParams(this.params);
     const cwd = process.cwd();
+    const cmd: string = `ffmpeg ${params.join(' ')}`;
 
-    this._proc = new RestartedProcess('ffmpeg', params, cwd, this.restartTimeout);
+    this._proc = new RestartedProcess(cmd, cwd, this.restartTimeout);
 
     this._proc.start();
 
@@ -36,17 +35,18 @@ export default class Ffmpeg {
     this.proc.onError(this.stderrEvents.emit);
   }
 
+  destroy() {
+    this.proc.destroy();
+    delete this._proc;
+  }
+
+
   onStdOut(cb: StdHandler) {
     this.stdoutEvents.addListener(cb);
   }
 
   onError(cb: StdHandler) {
     this.stderrEvents.addListener(cb);
-  }
-
-  destroy() {
-    this.proc.destroy();
-    delete this._proc;
   }
 
 

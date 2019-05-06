@@ -1,5 +1,5 @@
 import IndexedEvents from './helpers/IndexedEvents';
-import SpawnProcess, {CloseHandler, StdHandler} from './helpers/SpawnProcess';
+import SpawnProcess, {StdHandler} from './helpers/SpawnProcess';
 
 
 // in ms
@@ -11,21 +11,25 @@ export default class RestartedProcess {
   private readonly stderrEvents = new IndexedEvents<StdHandler>();
   private readonly cmd: string;
   private readonly cwd?: string;
-  private readonly params: string[];
   private readonly restartTimeout: number;
   private proc?: SpawnProcess;
 
 
-  constructor(cmd: string, params: string[], cwd?: string, restartTimeout: number = DEFAULT_RESTART_TIMEOUT) {
+  constructor(cmd: string, cwd?: string, restartTimeout: number = DEFAULT_RESTART_TIMEOUT) {
     this.cmd = cmd;
-    this.params = params;
     this.cwd = cwd;
     this.restartTimeout = restartTimeout;
   }
 
-
   start() {
     this.makeInstance();
+  }
+
+  destroy() {
+    this.stdoutEvents.removeAll();
+    this.stderrEvents.removeAll();
+    if (this.proc) this.proc.destroy();
+    delete this.proc;
   }
 
 
@@ -37,20 +41,11 @@ export default class RestartedProcess {
     this.stderrEvents.addListener(cb);
   }
 
-  destroy() {
-    this.stdoutEvents.removeAll();
-    this.stderrEvents.removeAll();
-    if (this.proc) this.proc.destroy();
-    delete this.proc;
-  }
-
 
   private makeInstance = () => {
     if (this.proc) this.proc.destroy();
 
-    const cmd: string = `${this.cmd} ${this.params.join(' ')}`;
-    this.proc = new SpawnProcess(cmd, this.cwd);
-
+    this.proc = new SpawnProcess(this.cmd, this.cwd);
     this.proc.onStdOut(this.stdoutEvents.emit);
     this.proc.onError(this.stderrEvents.emit);
     this.proc.onClose((code: number) => {
