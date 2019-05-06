@@ -11,14 +11,15 @@ export default class RestartedProcess {
   private readonly stderrEvents = new IndexedEvents<StdHandler>();
   private readonly cmd: string;
   private readonly cwd?: string;
-  private readonly restartTimeout: number;
+  private readonly restartTimeoutMs: number;
   private proc?: SpawnProcess;
+  private restartTimeout: any;
 
 
-  constructor(cmd: string, cwd?: string, restartTimeout: number = DEFAULT_RESTART_TIMEOUT) {
+  constructor(cmd: string, cwd?: string, restartTimeoutMs: number = DEFAULT_RESTART_TIMEOUT) {
     this.cmd = cmd;
     this.cwd = cwd;
-    this.restartTimeout = restartTimeout;
+    this.restartTimeoutMs = restartTimeoutMs;
   }
 
   start() {
@@ -26,6 +27,8 @@ export default class RestartedProcess {
   }
 
   destroy() {
+    //this.destroyInstance();
+    clearTimeout(this.restartTimeout);
     this.stdoutEvents.removeAll();
     this.stderrEvents.removeAll();
     if (this.proc) this.proc.destroy();
@@ -42,8 +45,6 @@ export default class RestartedProcess {
   }
 
 
-  // TODO: больше не стартовать если задестроенно
-
   private makeInstance = () => {
     // destroy previous instance if exist
     if (this.proc) this.proc.destroy();
@@ -55,24 +56,25 @@ export default class RestartedProcess {
     this.proc.onError(this.stderrEvents.emit);
     this.proc.onClose(this.handleProcClose);
 
-    // TODO: review
     try {
       this.proc.start();
     }
     catch (err) {
-
-      // TODO: отписаться
-
-      // TODO: use stderrEvents
-      console.error(`RestartedProcess: ${err}`);
-      // restart
-      setTimeout(this.makeInstance, this.restartTimeout);
+      // destroy if can't start
+      this.destroy();
+      // print error
+      this.stderrEvents.emit(`RestartedProcess: ${err}`);
+      // fully restart a process
+      this.restart();
     }
-
   }
 
   private handleProcClose = (code: number) => {
     // reconnect
+
+
+    // TODO: больше не стартовать если задестроенно
+
 
     if (code) {
       // TODO: use stderrEvents
@@ -80,7 +82,18 @@ export default class RestartedProcess {
     }
 
     // restart
-    setTimeout(this.makeInstance, this.restartTimeout);
+    this.restart();
   }
+
+  private restart() {
+    this.restartTimeout = setTimeout(this.makeInstance, this.restartTimeoutMs);
+  }
+
+  // private destroyInstance() {
+  //   this.stdoutEvents.removeAll();
+  //   this.stderrEvents.removeAll();
+  //   if (this.proc) this.proc.destroy();
+  //   delete this.proc;
+  // }
 
 }
