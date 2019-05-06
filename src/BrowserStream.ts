@@ -14,12 +14,15 @@ export default class BrowserStream {
   // like {'/live/smallRoom': ['QNRY4FDA']}
   private readonly connectedClients: {[index: string]: string[]} = {};
   private readonly main: Main;
-  private readonly mediaServer: MediaServer;
+  private mediaServer?: MediaServer;
 
 
   constructor(main: Main) {
     this.main = main;
-    this.mediaServer = new MediaServer(
+  }
+
+  async start() {
+    const mediaServer = new MediaServer(
       this.main.log.logLevel,
       this.main.config.rtmp,
       {
@@ -29,16 +32,15 @@ export default class BrowserStream {
       }
     );
 
-    this.mediaServer.onPreConnect(this.handlePreConnect);
-    this.mediaServer.onDoneConnect(this.handleDoneConnect);
-  }
+    this.mediaServer = mediaServer;
 
-  async start() {
-    this.mediaServer.start();
+    mediaServer.onPreConnect(this.handlePreConnect);
+    mediaServer.onDoneConnect(this.handleDoneConnect);
+    mediaServer.start();
   }
 
   destroy() {
-    this.mediaServer.destroy();
+    if (this.mediaServer) this.mediaServer.destroy();
   }
 
 

@@ -52,8 +52,8 @@ export default class SpawnProcess {
       this.stderrEvents.emit(data.toString(ENCODE))
     });
     spawnedCmd.on('close', (code: number) => {
-      this.closeCode = code;
-      this.closeEvents.emit(code);
+      this.closeCode = code || 0;
+      this.closeEvents.emit(code || 0);
     });
   }
 

@@ -24,8 +24,8 @@ export default class Ffmpeg {
     // TODO: read whereis - use abs path
 
     const params: string[] = this.makeParams(this.params);
+    const cmd: string = `/usr/bin/ffmpeg ${params.join(' ')}`;
     const cwd = process.cwd();
-    const cmd: string = `ffmpeg ${params.join(' ')}`;
 
     this._proc = new RestartedProcess(cmd, cwd, this.restartTimeout);
 
