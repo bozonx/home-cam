@@ -30,7 +30,7 @@ export default class RtmpStream {
     // print stdout in debug mode
     ffmpeg.onStdOut(this.main.log.debug);
     // print stderr to console
-    ffmpeg.onError(this.main.log.error)
+    ffmpeg.onError(this.main.log.debug)
   }
 
   destroy() {

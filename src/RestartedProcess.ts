@@ -50,6 +50,7 @@ export default class RestartedProcess {
     // listen events
     this.proc.onStdOut(this.stdoutEvents.emit);
     this.proc.onError(this.errorEvents.emit);
+    this.proc.onClose(this.handleProcClose);
 
     try {
       this.proc.start();
@@ -62,19 +63,11 @@ export default class RestartedProcess {
 
       return;
     }
-
-    // if process closed as soon as it was started - restart it
-    if (typeof this.proc.getCloseCode() !== 'undefined') {
-      this.errorEvents.emit(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${this.proc.getCloseCode()}"`)
-      this.restart();
-
-      return;
-    }
-
-    // or if process is still running - listen closing event
-    this.proc.onClose(this.handleProcClose);
   }
 
+  /**
+   * It rises if process is closed as soon as starts and if it is closed while processing.
+   */
   private handleProcClose = (code: number) => {
     if (code) {
       this.errorEvents.emit(`RestartedProcess: cmd "${this.cmd}" has been closed with non zero code "${code}"`)
@@ -84,6 +77,7 @@ export default class RestartedProcess {
   }
 
   private restart() {
+    this.errorEvents.emit(`RestartedProcess: restarting cmd "${this.cmd}"`);
     // destroy previous instance if exist
     if (this.proc) this.proc.destroy();
     // wait to restart
