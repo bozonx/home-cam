@@ -54,6 +54,7 @@ export default class SpawnProcess {
     spawnedCmd.on('close', (code: number) => {
       this.closeCode = code || 0;
       this.closeEvents.emit(code || 0);
+      this.destroy();
     });
   }
 
@@ -81,7 +82,6 @@ export default class SpawnProcess {
 
   onClose(cb: (code: number) => void) {
     this.closeEvents.addListener(cb);
-    this.destroy();
   }
 
 }
