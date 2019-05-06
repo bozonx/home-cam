@@ -79,11 +79,11 @@ export default class Main {
 
     const camName: string = splitLastElement(streamPath, '/')[0];
 
-    this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
-
     this.stopRtmpDebounce && this.stopRtmpDebounce(() => {
       // don't stop if someone ans been connected while it waits
       if (this.browserStream.hasAnyConnected(streamPath)) return;
+
+      this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
       this.stopRtmpCamServer(camName);
     });
