@@ -1,6 +1,7 @@
 import * as childProcess from 'child_process';
 import {ChildProcess} from "child_process";
 import IndexedEvents from './IndexedEvents';
+import {FILES_ENCODE} from './constants';
 
 
 export type StdHandler = (msg: string) => void;
@@ -43,14 +44,12 @@ export default class SpawnProcess {
 
     this.spawnedCmd = spawnedCmd;
 
-    // spawnedCmd.stdout.on('data', (data: Buffer) => console.log(data.toString('utf8')));
-    //
-    // spawnedCmd.stderr.on('data', (data: Buffer) => console.log(data.toString('utf8')));
-
-    //spawnedCmd.on('close', () => console.log(11111111111111111));
-
-    spawnedCmd.stdout.on('data', this.stdoutEvents.emit);
-    spawnedCmd.stderr.on('data', this.stderrEvents.emit);
+    spawnedCmd.stdout.on('data', (data: Buffer) => {
+      this.stdoutEvents.emit(data.toString(FILES_ENCODE))
+    });
+    spawnedCmd.stderr.on('data', (data: Buffer) => {
+      this.stderrEvents.emit(data.toString(FILES_ENCODE))
+    });
     spawnedCmd.on('close', this.closeEvents.emit);
   }
 

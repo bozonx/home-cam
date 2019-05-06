@@ -4,6 +4,7 @@ import {ChildProcess} from "child_process";
 import * as yaml from 'js-yaml';
 import * as shelljs from 'shelljs';
 import {callPromised} from './helpers';
+import {FILES_ENCODE} from './constants';
 
 
 export interface SpawnCmdResult {
@@ -12,7 +13,6 @@ export interface SpawnCmdResult {
   status: number;
 }
 
-const FILES_ENCODE = 'utf8';
 
 
 export default class Os {
