@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import IndexedEvents from './helpers/IndexedEvents';
-import MediaServer, {RequestArgs} from './helpers/MediaServer';
+import IndexedEvents from '../lib/helpers/IndexedEvents';
+import MediaServer, {RequestArgs} from '../lib/helpers/MediaServer';
 import Main from './Main';
 
 

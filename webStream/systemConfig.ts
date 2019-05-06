@@ -1,4 +1,4 @@
-import {RtmpConfig} from './interfaces/MainConfig';
+import {RtmpConfig} from '../lib/interfaces/MainConfig';
 
 
 const rtmpDefaults: RtmpConfig = {

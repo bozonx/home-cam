@@ -1,5 +1,5 @@
-import IndexedEvents from './helpers/IndexedEvents';
-import SpawnProcess, {StdHandler} from './helpers/SpawnProcess';
+import IndexedEvents from '../lib/helpers/IndexedEvents';
+import SpawnProcess, {StdHandler} from '../lib/helpers/SpawnProcess';
 
 
 // in ms

@@ -1,7 +1,7 @@
 import * as yargs from 'yargs';
 
 import Main from './Main';
-import LogLevel, {LOG_LEVELS} from './interfaces/LogLevel';
+import LogLevel, {LOG_LEVELS} from '../lib/interfaces/LogLevel';
 import ConsoleLogger from './ConsoleLogger';
 
 

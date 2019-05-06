@@ -1,10 +1,10 @@
 import Config from './Config';
 import BrowserStream from './BrowserStream';
-import {splitLastElement} from './helpers/helpers';
+import {splitLastElement} from '../lib/helpers/helpers';
 import systemConfig from './systemConfig';
 import RtmpStream from './RtmpStream';
-import Logger from './interfaces/Logger';
-import LogLevel from './interfaces/LogLevel';
+import Logger from '../lib/interfaces/Logger';
+import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 
 

@@ -1,5 +1,5 @@
-import {CamConfig} from './interfaces/MainConfig';
-import {makeUrl} from './helpers/helpers';
+import {CamConfig} from '../lib/interfaces/MainConfig';
+import {makeUrl} from '../lib/helpers/helpers';
 import Ffmpeg from './Ffmpeg';
 import Main from './Main';
 

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 
-import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from './interfaces/MainConfig';
-import Os from './helpers/Os';
+import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from '../lib/interfaces/MainConfig';
+import Os from '../lib/helpers/Os';
 import Main from './Main';
 
 
