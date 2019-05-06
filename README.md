@@ -9,7 +9,11 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
 
 ## Start service
 
-    home-cam ./my-config.yaml
+    home-cam [--log-level] ./my-config.yaml
+    
+Params
+
+* --log-level - One of log level: debug, info, warn, error. Default is info.
     
 
 ## Config
