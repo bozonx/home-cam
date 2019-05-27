@@ -1,3 +1,12 @@
+/*
+ * Parameters:
+ * * streamUrl - url to main stream. Required
+ * * thumbUrl - url to thumb jpeg which is updating. Required
+ * * thumbWidth - width of thumb. Default is 300
+ * * thumbHeight - height of thumb. Default is 169
+ * * thumbUpdatingIntervalSec - interval between updating of thumb in seconds. Default is 10.
+ */
+
 const IMG_WIDTH = 300;
 const IMG_HEIGHT = 169;
 const MODAL_WRAPPER_ID = 'home-cam__modal-wrapper';
@@ -66,8 +75,8 @@ function handleImgClick(streamUrl) {
   openFullView(streamUrl);
 }
 
-function instantiate(rootEl, previewSrc, streamUrl) {
-  const imgEl = makeImgEl(previewSrc, IMG_WIDTH, IMG_HEIGHT);
+function instantiate(rootEl, params) {
+  const imgEl = makeImgEl(params.previewSrc, IMG_WIDTH, IMG_HEIGHT);
 
   imgEl.onclick = (event) => {
     event.stopPropagation();
@@ -79,7 +88,7 @@ function instantiate(rootEl, previewSrc, streamUrl) {
 }
 
 
-window.placeCam = function (elementSelector, previewSrc, streamUrl) {
+window.placeCam = function (elementSelector, params) {
   if (elementSelector.indexOf('.') === 0) {
     const elements = document.getElementsByClassName(elementSelector.slice(1));
 
@@ -88,7 +97,7 @@ window.placeCam = function (elementSelector, previewSrc, streamUrl) {
     }
 
     for (let el of elements) {
-      instantiate(el, previewSrc, streamUrl);
+      instantiate(el, params);
     }
   }
   else if (elementSelector.indexOf('#') === 0) {
@@ -98,7 +107,7 @@ window.placeCam = function (elementSelector, previewSrc, streamUrl) {
       throw new Error(`Can't find element "${elementSelector}"`);
     }
 
-    instantiate(el, previewSrc, streamUrl);
+    instantiate(el, params);
   }
   else {
     throw new Error(`Incorrect selector "${elementSelector}"`);

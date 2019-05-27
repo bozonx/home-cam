@@ -2,16 +2,27 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="home-cam.css" />
-  <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
-  <script src="./home-cam.js"></script>
 </head>
 <body>
 
 <div id="cam0"></div>
+<div id="cam1"></div>
+
+<script src="./home-cam.js"></script>
 
 <script>
-  placeCam('#cam0', '/preview', 'http://192.168.88.3:8081/live/doorEye.flv');
+  placeCam('#cam0', {
+    thumbUrl: '/preview',
+    streamUrl: 'http://192.168.88.3:8081/live/doorEye.flv',
+  });
+  placeCam('#cam1', {
+    thumbUrl: '/preview',
+    streamUrl: 'http://192.168.88.3:8081/live/smallRoom.flv',
+  });
 </script>
+
+<script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
+
 
 <!--
 <video id="videoElement"></video>
