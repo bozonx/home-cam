@@ -12,31 +12,46 @@ function makeImgEl(src, width, height) {
   return imgEl;
 }
 
-function handleImgClick(event) {
-
+function openFullView(streamUrl) {
+  // TODO: remove prevoiusly opened
+  // TODO: make elements
+  // TODO: start flv
+  console.log(11111111, streamUrl)
 }
 
-function instantiate(rootEl, previewSrc) {
+function handleImgClick(streamUrl) {
+  openFullView(streamUrl);
+}
+
+function instantiate(rootEl, previewSrc, streamUrl) {
   const imgEl = makeImgEl(previewSrc, IMG_WIDTH, IMG_HEIGHT);
 
-  imgEl.onclick = handleImgClick();
+  imgEl.onclick = () => handleImgClick(streamUrl);
 
   rootEl.append(imgEl);
 }
 
 
-window.place = function (elementSelector, previewSrc) {
+window.placeCam = function (elementSelector, previewSrc, streamUrl) {
   if (elementSelector.indexOf('.') === 0) {
     const elements = document.getElementsByClassName(elementSelector);
 
+    if (!elements.length) {
+      throw new Error(`Can't find elements "${elementSelector}"`);
+    }
+
     for (let el of elements) {
-      instantiate(el, previewSrc);
+      instantiate(el, previewSrc, streamUrl);
     }
   }
   else if (elementSelector.indexOf('#') === 0) {
     const el = document.getElementById(elementSelector);
 
-    instantiate(el, previewSrc);
+    if (!el) {
+      throw new Error(`Can't find element "${elementSelector}"`);
+    }
+
+    instantiate(el, previewSrc, streamUrl);
   }
   else {
     throw new Error(`Incorrect selector "${elementSelector}"`);
