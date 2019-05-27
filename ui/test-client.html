@@ -6,11 +6,11 @@
 
 <script src="./home-cam.js"></script>
 
-<script>
-  placeCam('#cam0');
-</script>
-
 <div id="cam0"></div>
+
+<script>
+  placeCam('#cam0', '/preview', 'http://192.168.88.3:8081/live/doorEye.flv');
+</script>
 
 
 <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
@@ -23,7 +23,10 @@
       //url: 'http://localhost:8000/live/cam0.flv'
       //url: 'ws://localhost:8081/live/cam0.flv'
       //url: 'http://0.0.0.0:8081/live/smallRoom.flv'
-      url: 'http://192.168.88.3:8081/live/smallRoom.flv'
+
+      //url: 'http://192.168.88.3:8081/live/smallRoom.flv'
+      //url: 'http://192.168.88.3:8081/live/doorEye.flv'
+
       //url: 'ws://localhost:8081/live/smallRoom.flv'
       //url: 'ws://localhost:8081/live/doorEye.flv'
     });

@@ -3,7 +3,7 @@ const IMG_HEIGHT = 169;
 
 
 function makeImgEl(src, width, height) {
-  const imgEl = document.createElement('input');
+  const imgEl = document.createElement('img');
 
   imgEl.setAttribute('src', src);
   imgEl.setAttribute('width', width);
@@ -34,7 +34,7 @@ function instantiate(rootEl, previewSrc, streamUrl) {
 
 window.placeCam = function (elementSelector, previewSrc, streamUrl) {
   if (elementSelector.indexOf('.') === 0) {
-    const elements = document.getElementsByClassName(elementSelector);
+    const elements = document.getElementsByClassName(elementSelector.slice(1));
 
     if (!elements.length) {
       throw new Error(`Can't find elements "${elementSelector}"`);
@@ -45,7 +45,7 @@ window.placeCam = function (elementSelector, previewSrc, streamUrl) {
     }
   }
   else if (elementSelector.indexOf('#') === 0) {
-    const el = document.getElementById(elementSelector);
+    const el = document.getElementById(elementSelector.slice(1));
 
     if (!el) {
       throw new Error(`Can't find element "${elementSelector}"`);
