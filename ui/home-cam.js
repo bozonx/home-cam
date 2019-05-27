@@ -1,11 +1,12 @@
 const IMG_WIDTH = 300;
 const IMG_HEIGHT = 169;
 const MODAL_WRAPPER_ID = 'home-cam__modal-wrapper';
+const STREAM_EL = 'home-cam__stream';
 
 const modalTpl = `<div id="home-cam__modal">` +
   `<div id="home-cam__body">` +
     //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
-    `<div id="home-cam__stream"></div>` +
+    `<video id="${STREAM_EL}"></video>` +
   `</div>` +
   `</div>`;
 
@@ -49,11 +50,12 @@ function openFullView(streamUrl) {
 
 function startStream(streamUrl) {
   if (flvjs.isSupported()) {
-    var videoElement = document.getElementById('videoElement');
-    var flvPlayer = flvjs.createPlayer({
+    const videoElement = document.getElementById(STREAM_EL);
+    const flvPlayer = flvjs.createPlayer({
       type: 'flv',
       url: streamUrl
     });
+
     flvPlayer.attachMediaElement(videoElement);
     flvPlayer.load();
     flvPlayer.play();

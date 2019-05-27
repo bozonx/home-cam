@@ -2,10 +2,10 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="home-cam.css" />
+  <script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
+  <script src="./home-cam.js"></script>
 </head>
 <body>
-
-<script src="./home-cam.js"></script>
 
 <div id="cam0"></div>
 
@@ -13,8 +13,7 @@
   placeCam('#cam0', '/preview', 'http://192.168.88.3:8081/live/doorEye.flv');
 </script>
 
-
-<script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
+<!--
 <video id="videoElement"></video>
 <script>
   if (flvjs.isSupported()) {
@@ -36,6 +35,7 @@
     flvPlayer.play();
   }
 </script>
+-->
 
 </body>
 </html>
