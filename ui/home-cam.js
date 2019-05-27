@@ -1,5 +1,13 @@
 const IMG_WIDTH = 300;
 const IMG_HEIGHT = 169;
+const MODAL_WRAPPER_ID = 'home-cam__modal-wrapper';
+
+const modalTpl = `<div id="home-cam__modal">` +
+  `<div id="home-cam__body">` +
+    //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
+    `<div id="home-cam__stream"></div>` +
+  `</div>` +
+  `</div>`;
 
 
 function makeImgEl(src, width, height) {
@@ -12,11 +20,44 @@ function makeImgEl(src, width, height) {
   return imgEl;
 }
 
+function removeModal() {
+  const modalWrapperEl = document.getElementById(MODAL_WRAPPER_ID);
+
+  if (modalWrapperEl) modalWrapperEl.remove();
+}
+
+function closeModal() {
+  removeModal();
+}
+
 function openFullView(streamUrl) {
-  // TODO: remove prevoiusly opened
-  // TODO: make elements
-  // TODO: start flv
-  console.log(11111111, streamUrl)
+  // remove prevoiusly opened
+  removeModal();
+
+  const modal = document.createElement('div');
+
+  modal.setAttribute('id', MODAL_WRAPPER_ID);
+  modal.innerHTML = modalTpl.trim();
+  document.body.append(modal);
+
+  const modalInner = document.getElementById('home-cam__modal');
+
+  modalInner.onclick = closeModal;
+
+  startStream(streamUrl);
+}
+
+function startStream(streamUrl) {
+  if (flvjs.isSupported()) {
+    var videoElement = document.getElementById('videoElement');
+    var flvPlayer = flvjs.createPlayer({
+      type: 'flv',
+      url: streamUrl
+    });
+    flvPlayer.attachMediaElement(videoElement);
+    flvPlayer.load();
+    flvPlayer.play();
+  }
 }
 
 function handleImgClick(streamUrl) {
@@ -26,7 +67,11 @@ function handleImgClick(streamUrl) {
 function instantiate(rootEl, previewSrc, streamUrl) {
   const imgEl = makeImgEl(previewSrc, IMG_WIDTH, IMG_HEIGHT);
 
-  imgEl.onclick = () => handleImgClick(streamUrl);
+  imgEl.onclick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    handleImgClick(streamUrl);
+  };
 
   rootEl.append(imgEl);
 }
