@@ -9,8 +9,13 @@
 
 
 class FullViewModal {
-  _modalWrapperId= 'home-cam__modal-wrapper';
+  // this is persistent element
+  _modalRootId= 'home-cam__modal-root';
+  // this element adds and removes on open/close
+  _modalId= 'home-cam__modal';
   _streamElId = 'home-cam__stream';
+  _openEventName = 'modal-open';
+  _closeEventName = 'modal-close';
   _modalTpl = `<div id="home-cam__modal">` +
     `<div id="home-cam__body">` +
     //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
@@ -19,43 +24,61 @@ class FullViewModal {
     `</div>`;
 
   constructor() {
+    const modalRootEl = document.createElement('div');
 
+    modalRootEl.setAttribute('id', this._modalRootId);
+    document.body.append(modalRootEl);
   }
 
   open(streamUrl) {
-    // remove prevoiusly opened
+    // remove previously opened
     this._removeModal();
-    // create a new dom tree
+    // create an inner modal
     this._createDom();
 
-    const modalInner = document.getElementById('home-cam__modal');
+    const modalRootEl = document.getElementById(this._modalRootId);
+    const modalEl = document.getElementById(this._modalId);
+    const event = new CustomEvent(this._openEventName);
 
-    modalInner.onclick = () => {
-      this._removeModal();
+    modalEl.onclick = () => {
+      this._handleModalClose();
     };
 
+    modalRootEl.dispatchEvent(event);
     this._startStream(streamUrl);
   }
 
   onOpen(cb) {
+    const modalRootEl = document.getElementById(this._modalRootId);
+
+    modalRootEl.addEventListener(this._openEventName, cb);
   }
 
   onClose(cb) {
+    const modalRootEl = document.getElementById(this._modalRootId);
+
+    modalRootEl.addEventListener(this._closeEventName, cb);
   }
 
 
-  _createDom() {
-    const modal = document.createElement('div');
+  _handleModalClose() {
+    const modalRootEl = document.getElementById(this._modalRootId);
+    const event = new CustomEvent(this._closeEventName);
 
-    modal.setAttribute('id', this._modalWrapperId);
-    modal.innerHTML = this._modalTpl.trim();
-    document.body.append(modal);
+    modalRootEl.dispatchEvent(event);
+    this._removeModal();
+  }
+
+  _createDom() {
+    const modalRootEl = document.getElementById(this._modalRootId);
+
+    modalRootEl.innerHTML = this._modalTpl.trim();
   }
 
   _removeModal() {
-    const modalWrapperEl = document.getElementById(this._modalWrapperId);
+    const modal = document.getElementById(this._modalId);
 
-    if (modalWrapperEl) modalWrapperEl.remove();
+    if (modal) modal.remove();
   }
 
   _startStream(streamUrl) {
@@ -118,9 +141,11 @@ class Camera {
   }
 
   _makeImgEl() {
+
+    // TODO: maybe not use width and height if they aren't set
+
     const width = this._params.thumbWidth || this.defaultImgWidth;
     const height = this._params.thumbHeight || this.defaultImgHeight;
-    //const imgEl = document.createElement('img');
 
     this._imgEl.setAttribute('src', this._params.thumbUrl);
     this._imgEl.setAttribute('width', width);
@@ -128,8 +153,6 @@ class Camera {
 
     return this._imgEl;
   }
-
-  // TODO: while modal is oppened - don't update
 
   _startUpdating() {
     this.updateInterval = setInterval(() => {
