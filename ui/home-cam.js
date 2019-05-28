@@ -68,16 +68,25 @@ class FullViewModal {
 class Camera {
   defaultImgWidth = 300;
   defaultImgHeight = 169;
+  defaultUpdatingIntervalSec = 10;
 
 
   constructor(rootEl, fullViewModal, params) {
     this._rootEl = rootEl;
     this._fullViewModal = fullViewModal;
     this._params = params;
+    this._updatingIntervalSec = this.defaultUpdatingIntervalSec || params.thumbUpdatingIntervalSec;
+    this._imgEl = document.createElement('img');
   }
 
 
   init() {
+    this._createDom();
+    this._startUpdating();
+  }
+
+
+  _createDom() {
     const imgEl = this._makeImgEl();
 
     imgEl.onclick = () => {
@@ -90,13 +99,21 @@ class Camera {
   _makeImgEl() {
     const width = this._params.thumbWidth || this.defaultImgWidth;
     const height = this._params.thumbHeight || this.defaultImgHeight;
-    const imgEl = document.createElement('img');
+    //const imgEl = document.createElement('img');
 
-    imgEl.setAttribute('src', this._params.thumbUrl);
-    imgEl.setAttribute('width', width);
-    imgEl.setAttribute('height', height);
+    this._imgEl.setAttribute('src', this._params.thumbUrl);
+    this._imgEl.setAttribute('width', width);
+    this._imgEl.setAttribute('height', height);
 
-    return imgEl;
+    return this._imgEl;
+  }
+
+  // TODO: while modal is oppened - don't update
+
+  _startUpdating() {
+    setInterval(() => {
+      this._imgEl.setAttribute('src', this._params.thumbUrl);
+    }, this._updatingIntervalSec * 1000);
   }
 
 }
