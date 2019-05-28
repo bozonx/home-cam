@@ -18,6 +18,10 @@ class FullViewModal {
     `</div>` +
     `</div>`;
 
+  constructor() {
+
+  }
+
   open(streamUrl) {
     // remove prevoiusly opened
     this._removeModal();
@@ -31,6 +35,12 @@ class FullViewModal {
     };
 
     this._startStream(streamUrl);
+  }
+
+  onOpen(cb) {
+  }
+
+  onClose(cb) {
   }
 
 
@@ -93,6 +103,17 @@ class Camera {
       this._fullViewModal.open(this._params.streamUrl);
     };
 
+    // don't update thumb while modal is opened
+    this._fullViewModal.onOpen(() => {
+      this._stopInterval();
+    });
+
+    // carry on updating thumb on modal close
+    this._fullViewModal.onClose(() => {
+      this._updateThumb();
+      this._startUpdating();
+    });
+
     this._rootEl.append(imgEl);
   }
 
@@ -111,9 +132,18 @@ class Camera {
   // TODO: while modal is oppened - don't update
 
   _startUpdating() {
-    setInterval(() => {
-      this._imgEl.setAttribute('src', this._params.thumbUrl);
+    this.updateInterval = setInterval(() => {
+      this._updateThumb();
     }, this._updatingIntervalSec * 1000);
+  }
+
+  _stopInterval() {
+    clearInterval(this.updateInterval);
+    delete this.updateInterval;
+  }
+
+  _updateThumb() {
+    this._imgEl.setAttribute('src', this._params.thumbUrl);
   }
 
 }
