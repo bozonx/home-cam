@@ -7,88 +7,104 @@
  * * thumbUpdatingIntervalSec - interval between updating of thumb in seconds. Default is 10.
  */
 
-const IMG_WIDTH = 300;
-const IMG_HEIGHT = 169;
-const MODAL_WRAPPER_ID = 'home-cam__modal-wrapper';
-const STREAM_EL = 'home-cam__stream';
 
-const modalTpl = `<div id="home-cam__modal">` +
-  `<div id="home-cam__body">` +
+class FullViewModal {
+  _modalWrapperId= 'home-cam__modal-wrapper';
+  _streamElId = 'home-cam__stream';
+  _modalTpl = `<div id="home-cam__modal">` +
+    `<div id="home-cam__body">` +
     //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
-    `<video id="${STREAM_EL}"></video>` +
-  `</div>` +
-  `</div>`;
+    `<video id="${this._streamElId}"></video>` +
+    `</div>` +
+    `</div>`;
 
+  open(streamUrl) {
+    // remove prevoiusly opened
+    this._removeModal();
+    // create a new dom tree
+    this._createDom();
 
-function makeImgEl(src, width, height) {
-  const imgEl = document.createElement('img');
+    const modalInner = document.getElementById('home-cam__modal');
 
-  imgEl.setAttribute('src', src);
-  imgEl.setAttribute('width', width);
-  imgEl.setAttribute('height', height);
+    modalInner.onclick = () => {
+      this._removeModal();
+    };
 
-  return imgEl;
-}
-
-function removeModal() {
-  const modalWrapperEl = document.getElementById(MODAL_WRAPPER_ID);
-
-  if (modalWrapperEl) modalWrapperEl.remove();
-}
-
-function closeModal() {
-  removeModal();
-}
-
-function openFullView(streamUrl) {
-  // remove prevoiusly opened
-  removeModal();
-
-  const modal = document.createElement('div');
-
-  modal.setAttribute('id', MODAL_WRAPPER_ID);
-  modal.innerHTML = modalTpl.trim();
-  document.body.append(modal);
-
-  const modalInner = document.getElementById('home-cam__modal');
-
-  modalInner.onclick = closeModal;
-
-  startStream(streamUrl);
-}
-
-function startStream(streamUrl) {
-  if (flvjs.isSupported()) {
-    const videoElement = document.getElementById(STREAM_EL);
-    const flvPlayer = flvjs.createPlayer({
-      type: 'flv',
-      url: streamUrl
-    });
-
-    flvPlayer.attachMediaElement(videoElement);
-    flvPlayer.load();
-    flvPlayer.play();
+    this._startStream(streamUrl);
   }
+
+
+  _createDom() {
+    const modal = document.createElement('div');
+
+    modal.setAttribute('id', this._modalWrapperId);
+    modal.innerHTML = this._modalTpl.trim();
+    document.body.append(modal);
+  }
+
+  _removeModal() {
+    const modalWrapperEl = document.getElementById(this._modalWrapperId);
+
+    if (modalWrapperEl) modalWrapperEl.remove();
+  }
+
+  _startStream(streamUrl) {
+    if (flvjs.isSupported()) {
+      const videoElement = document.getElementById(this._streamElId);
+      const flvPlayer = flvjs.createPlayer({
+        type: 'flv',
+        url: streamUrl
+      });
+
+      flvPlayer.attachMediaElement(videoElement);
+      flvPlayer.load();
+      flvPlayer.play();
+    }
+  }
+
 }
 
-function handleImgClick(streamUrl) {
-  openFullView(streamUrl);
-}
 
-function instantiate(rootEl, params) {
-  const imgEl = makeImgEl(params.previewSrc, IMG_WIDTH, IMG_HEIGHT);
+class Camera {
+  defaultImgWidth = 300;
+  defaultImgHeight = 169;
 
-  imgEl.onclick = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    handleImgClick(streamUrl);
-  };
 
-  rootEl.append(imgEl);
+  constructor(rootEl, fullViewModal, params) {
+    this._rootEl = rootEl;
+    this._fullViewModal = fullViewModal;
+    this._params = params;
+  }
+
+
+  init() {
+    const imgEl = this._makeImgEl();
+
+    imgEl.onclick = () => {
+      this._fullViewModal.open(this._params.streamUrl);
+    };
+
+    this._rootEl.append(imgEl);
+  }
+
+  _makeImgEl() {
+    const width = this._params.thumbWidth || this.defaultImgWidth;
+    const height = this._params.thumbHeight || this.defaultImgHeight;
+    const imgEl = document.createElement('img');
+
+    imgEl.setAttribute('src', this._params.thumbUrl);
+    imgEl.setAttribute('width', width);
+    imgEl.setAttribute('height', height);
+
+    return imgEl;
+  }
+
 }
 
 
 window.placeCam = function (elementSelector, params) {
+  const fullViewModal = new FullViewModal(params);
+
   if (elementSelector.indexOf('.') === 0) {
     const elements = document.getElementsByClassName(elementSelector.slice(1));
 
@@ -97,7 +113,9 @@ window.placeCam = function (elementSelector, params) {
     }
 
     for (let el of elements) {
-      instantiate(el, params);
+      const camera = new Camera(el, fullViewModal, params);
+
+      camera.init();
     }
   }
   else if (elementSelector.indexOf('#') === 0) {
@@ -107,7 +125,9 @@ window.placeCam = function (elementSelector, params) {
       throw new Error(`Can't find element "${elementSelector}"`);
     }
 
-    instantiate(el, params);
+    const camera = new Camera(el, fullViewModal, params);
+
+    camera.init();
   }
   else {
     throw new Error(`Incorrect selector "${elementSelector}"`);
