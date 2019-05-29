@@ -29,4 +29,8 @@ export default class Os {
     }
   }
 
+  async copyFile(src: string, dest: string): Promise<void> {
+    return callPromised(fs.copyFile, src, dest);
+  }
+
 }

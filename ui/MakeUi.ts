@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import Main from '../webStream/Main';
-import {UI_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
+import {REPO_ROOT, UI_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
 
 
 export default class MakeUi {
@@ -10,10 +10,6 @@ export default class MakeUi {
 
   constructor(main: Main) {
     this.main = main;
-  }
-
-  destroy() {
-    // TODO: add
   }
 
 
@@ -26,6 +22,14 @@ export default class MakeUi {
     await this.main.os.mkdirP(uiDir);
     await this.main.os.writeFile(indexHtmlPath, indexHtml);
 
+    await this.main.os.copyFile(
+      path.join(REPO_ROOT, 'cam-view', 'home-cam-view.js'),
+      path.join(uiDir, 'cam-view', 'home-cam-view.js')
+    );
+    await this.main.os.copyFile(
+      path.join(REPO_ROOT, 'cam-view', 'home-cam-view.css'),
+      path.join(uiDir, 'cam-view', 'home-cam-view.css')
+    );
   }
 
 
