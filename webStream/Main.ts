@@ -6,6 +6,7 @@ import RtmpStream from './RtmpStream';
 import Logger from '../lib/interfaces/Logger';
 import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
+import StaticServer from './StaticServer';
 
 
 export default class Main {
@@ -15,6 +16,7 @@ export default class Main {
   readonly browserStream: BrowserStream;
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
   private stopRtmpDebounce?: (cb: () => void) => void;
+  private readonly staticServer: StaticServer;
 
 
   constructor(
@@ -25,6 +27,7 @@ export default class Main {
     this.config = new Config(configPath, this);
     this.log = new LoggerClass(logLevel);
     this.browserStream = new BrowserStream(this);
+    this.staticServer = new StaticServer(this);
   }
 
 
@@ -35,7 +38,10 @@ export default class Main {
       this.config.config.rtmpStopDelaySec * 1000
     );
 
+    this.log.info(`--> starting browser stream`);
     await this.browserStream.start();
+    this.log.info(`--> starting static server`);
+    this.staticServer.start();
 
     this.browserStream.onOpenConnection(this.handleBrowserOpenConnection);
     this.browserStream.onCloseConnection(this.handleBrowserCloseConnection);
@@ -54,6 +60,8 @@ export default class Main {
 
     this.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
+    this.log.info(`--> stopping static server`);
+    this.staticServer.destroy();
   }
 
 
