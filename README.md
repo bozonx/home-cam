@@ -9,7 +9,7 @@ Easily convert cam stream from rtsp to mgpeg. Make thumbnails and main stream on
 
 ## Start service
 
-    home-cam [--log-level] ./my-config.yaml
+    home-cam --work-dir=./workDir [--log-level=info] ./my-config.yaml
     
 Params
 
@@ -54,8 +54,8 @@ Params
         mjpeg:
           frameRate: 25
         thumb:
-          width: 680
-          height: 308
+          width: 300
+          height: 169
           makeImage: 300
           updateInterval: 5
           frameRate: 25

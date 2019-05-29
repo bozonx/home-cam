@@ -22,9 +22,10 @@ export default class Main {
   constructor(
     configPath: string,
     LoggerClass: new (logLevel: LogLevel) => Logger,
+    workDir?: string,
     logLevel: LogLevel = 'info'
   ) {
-    this.config = new Config(configPath, this);
+    this.config = new Config(this, configPath, workDir);
     this.log = new LoggerClass(logLevel);
     this.browserStream = new BrowserStream(this);
     this.staticServer = new StaticServer(this);

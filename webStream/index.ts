@@ -7,6 +7,7 @@ import ConsoleLogger from './ConsoleLogger';
 
 async function start() {
   const configPath: string | undefined = yargs.argv._[0];
+  const workDir: string | undefined = yargs.argv.workDir as any;
   const logLevel: LogLevel | undefined = yargs.argv.logLevel as any;
 
   if (!configPath) {
@@ -19,7 +20,7 @@ async function start() {
     process.exit(2);
   }
 
-  const main: Main = new Main(configPath, ConsoleLogger, logLevel);
+  const main: Main = new Main(configPath, ConsoleLogger, workDir, logLevel);
 
   await main.start();
 }

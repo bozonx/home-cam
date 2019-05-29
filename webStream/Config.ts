@@ -22,10 +22,16 @@ export default class Config {
   private readonly main: Main;
   private readonly os: Os = new Os();
   private readonly configPath: string;
+  private readonly workDir: string;
 
 
-  constructor(configPath: string, main: Main) {
+  constructor(main: Main, configPath: string, workDir?: string) {
+    if (!workDir) {
+      throw new Error(`ERROR: You have to specify a --work-dir param`);
+    }
+
     this.configPath = configPath;
+    this.workDir = workDir;
     this.main = main;
   }
 
