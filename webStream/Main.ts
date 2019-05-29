@@ -7,7 +7,7 @@ import Logger from '../lib/interfaces/Logger';
 import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './StaticServer';
-import MakeUi from './MakeUi';
+import MakeUi from '../ui/MakeUi';
 import Os from '../lib/helpers/Os';
 
 

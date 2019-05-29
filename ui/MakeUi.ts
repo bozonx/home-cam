@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import Main from './Main';
+import Main from '../webStream/Main';
 import {UI_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
 
 
