@@ -7,6 +7,7 @@ import Logger from '../lib/interfaces/Logger';
 import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './StaticServer';
+import MakeUi from './MakeUi';
 
 
 export default class Main {
@@ -17,6 +18,7 @@ export default class Main {
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
+  private readonly makeUi: MakeUi;
 
 
   constructor(
@@ -29,6 +31,7 @@ export default class Main {
     this.log = new LoggerClass(logLevel);
     this.browserStream = new BrowserStream(this);
     this.staticServer = new StaticServer(this);
+    this.makeUi = new MakeUi(this);
   }
 
 
@@ -41,6 +44,8 @@ export default class Main {
 
     this.log.info(`--> starting browser stream`);
     await this.browserStream.start();
+    this.log.info(`--> making UI`);
+    await this.makeUi.make();
     this.log.info(`--> starting static server`);
     this.staticServer.start();
 

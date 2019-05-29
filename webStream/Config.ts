@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as path from 'path';
 
 import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from '../lib/interfaces/MainConfig';
 import Os from '../lib/helpers/Os';
@@ -6,6 +7,8 @@ import Main from './Main';
 
 
 export default class Config {
+  readonly workDir: string;
+  readonly os: Os = new Os();
   get cams(): {[index: string]: CamConfig} {
     return (this.mainConfig as any).cams;
   }
@@ -20,9 +23,7 @@ export default class Config {
   }
   private mainConfig?: MainConfig;
   private readonly main: Main;
-  private readonly os: Os = new Os();
   private readonly configPath: string;
-  private readonly workDir: string;
 
 
   constructor(main: Main, configPath: string, workDir?: string) {
@@ -31,7 +32,7 @@ export default class Config {
     }
 
     this.configPath = configPath;
-    this.workDir = workDir;
+    this.workDir = path.resolve(process.cwd(), workDir);
     this.main = main;
   }
 
