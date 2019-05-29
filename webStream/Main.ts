@@ -8,6 +8,7 @@ import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './StaticServer';
 import MakeUi from './MakeUi';
+import Os from '../lib/helpers/Os';
 
 
 export default class Main {
@@ -15,6 +16,7 @@ export default class Main {
   readonly log: Logger;
   readonly systemConfig = systemConfig;
   readonly browserStream: BrowserStream;
+  readonly os: Os = new Os();
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;

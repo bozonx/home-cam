@@ -20,11 +20,17 @@ export default class MakeUi {
   async make() {
     // TODO: add
     const uiDir = path.join(this.main.config.workDir, WWW_ROOT_DIR, UI_DIR);
+    const indexHtmlPath = path.join(uiDir, 'index.html');
+    const indexHtml = this.makeIndexHtml();
 
     await this.main.os.mkdirP(uiDir);
-
+    await this.main.os.writeFile(indexHtmlPath, indexHtml);
 
   }
 
+
+  private makeIndexHtml(): string {
+
+  }
 
 }

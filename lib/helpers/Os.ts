@@ -20,4 +20,13 @@ export default class Os {
     shelljs.mkdir('-p', dirName);
   }
 
+  async writeFile(pathTo: string, data: string | Uint8Array): Promise<void> {
+    if (typeof data === 'string') {
+      return callPromised(fs.writeFile, pathTo, data, ENCODE);
+    }
+    else {
+      return callPromised(fs.writeFile, pathTo, data);
+    }
+  }
+
 }

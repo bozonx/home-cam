@@ -3,4 +3,4 @@
 DIRNAME=$(dirname $0)
 export NODE_PATH=${DIRNAME}/node_modules:${NODE_PATH}
 
-/usr/bin/env node ${DIRNAME}/home-cam.js ${@}
+/usr/bin/env node ${DIRNAME}/home-cam-view.js ${@}

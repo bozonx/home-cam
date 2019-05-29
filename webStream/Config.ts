@@ -8,7 +8,6 @@ import Main from './Main';
 
 export default class Config {
   readonly workDir: string;
-  readonly os: Os = new Os();
   get cams(): {[index: string]: CamConfig} {
     return (this.mainConfig as any).cams;
   }
@@ -38,7 +37,7 @@ export default class Config {
 
 
   async make() {
-    const preConfig = await this.os.loadYamlFile(this.configPath);
+    const preConfig = await this.main.os.loadYamlFile(this.configPath);
 
     this.validateConfig(preConfig);
 
