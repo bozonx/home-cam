@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 
-import Main from '../webStream/Main';
 import {REPO_ROOT, THUMB_FILE_NAME, THUMBS_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
 import {CamConfig} from '../lib/interfaces/MainConfig';
 import Context from '../lib/context/Context';

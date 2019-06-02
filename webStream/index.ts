@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
 
-import Main from './Main';
+import StandAlone from '../StandAlone';
 import LogLevel, {LOG_LEVELS} from '../lib/interfaces/LogLevel';
 import ConsoleLogger from '../lib/context/ConsoleLogger';
 
@@ -20,7 +20,7 @@ async function start() {
     process.exit(2);
   }
 
-  const main: Main = new Main(configPath, ConsoleLogger, workDir, logLevel);
+  const main: StandAlone = new StandAlone(configPath, ConsoleLogger, workDir, logLevel);
 
   await main.start();
 }

@@ -1,17 +1,17 @@
-import Config from '../lib/context/Config';
-import BrowserStream from './BrowserStream';
-import {splitLastElement} from '../lib/helpers/helpers';
-import systemConfig from '../lib/context/systemConfig';
-import Logger from '../lib/interfaces/Logger';
-import LogLevel from '../lib/interfaces/LogLevel';
+import Config from './lib/context/Config';
+import BrowserStream from './webStream/BrowserStream';
+import {splitLastElement} from './lib/helpers/helpers';
+import systemConfig from './lib/context/systemConfig';
+import Logger from './lib/interfaces/Logger';
+import LogLevel from './lib/interfaces/LogLevel';
 import * as _ from 'lodash';
-import StaticServer from '../ui/StaticServer';
-import MakeUi from '../ui/MakeUi';
-import Os from '../lib/context/Os';
-import Cameras from './Cameras';
+import StaticServer from './ui/StaticServer';
+import MakeUi from './ui/MakeUi';
+import Os from './lib/context/Os';
+import Cameras from './webStream/Cameras';
 
 
-export default class Main {
+export default class StandAlone {
   private readonly browserStream: BrowserStream;
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
