@@ -1,7 +1,7 @@
 import * as path from 'path';
 
-import Ffmpeg from './Ffmpeg';
-import Main from './Main';
+import Ffmpeg from '../webStream/Ffmpeg';
+import Main from '../webStream/Main';
 import {CamConfig} from '../lib/interfaces/MainConfig';
 import {makeUrl} from '../lib/helpers/helpers';
 import {THUMB_FILE_NAME, THUMBS_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';

@@ -3,7 +3,7 @@
  */
 
 import RtmpStream from './RtmpStream';
-import ThumbMaker from './ThumbMaker';
+import ThumbMaker from '../thumb/ThumbMaker';
 import Main from './Main';
 
 
@@ -52,6 +52,5 @@ export default class Cameras {
     this.rtmpInstances[camName].destroy();
     delete this.rtmpInstances[camName];
   }
-
 
 }
