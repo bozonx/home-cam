@@ -44,5 +44,6 @@ export default {
   // app config
   config: {
     rtmpStopDelaySec: 10,
+    destroyTimeoutSec: 30,
   }
 };

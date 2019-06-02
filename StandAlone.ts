@@ -42,6 +42,8 @@ export default class StandAlone {
   async start() {
     await this.context.config.make();
 
+    this.listenSignals();
+
     this.context.log.info(`===> starting browser stream`);
     await this.browserStream.start();
     this.context.log.info(`===> making UI`);
@@ -49,17 +51,41 @@ export default class StandAlone {
     this.context.log.info(`===> starting static server`);
     await this.staticServer.start();
 
+    this.context.log.info(`===> starting web stream`);
+    await this.webStreamService.start();
     this.browserStream.onOpenConnection(this.webStreamService.handleStreamOpenConnection);
     this.browserStream.onCloseConnection(this.webStreamService.handleStreamCloseConnection);
   }
 
-  async destroy() {
+
+  private async destroy() {
     this.context.log.info(`--> closing ffmpeg RTMP streams`);
     this.webStreamService.destroy();
     this.context.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
     this.context.log.info(`--> stopping static server`);
     await this.staticServer.destroy();
+  }
+
+  private listenSignals() {
+    const gracefullyDestroy = async () => {
+      setTimeout(() => {
+        console.error(`ERROR: System hasn't been gracefully destroyed during "${this.context.systemConfig.config.destroyTimeoutSec}" seconds`);
+        process.exit(3);
+      }, this.context.systemConfig.config.destroyTimeoutSec * 1000);
+
+      try {
+        await this.destroy();
+        process.exit(0);
+      }
+      catch (err) {
+        console.error(err);
+        process.exit(2);
+      }
+    };
+
+    process.on('SIGTERM', gracefullyDestroy);
+    process.on('SIGINT', gracefullyDestroy);
   }
 
 }
