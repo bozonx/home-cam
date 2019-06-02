@@ -20,7 +20,7 @@ export default class ConsoleLogger {
   debug = (message: string) => {
     if (this.logLevel !== 'debug') return;
 
-    console.info(message);
+    console.error(`DEBUG: ${message}`);
   }
 
   info = (message: string) => {

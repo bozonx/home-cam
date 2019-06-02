@@ -28,12 +28,12 @@ export default {
   },
   rtmpDefaults,
   ffmpegDefaults: {
-    'c:v': 'libx264',
-    'preset': 'superfast',
-    'tune': 'zerolatency',
-    'c:a': 'aac',
-    'ar': 44100,
-    'f': 'flv',
+    '-c:v': 'libx264',
+    '-preset': 'superfast',
+    '-tune': 'zerolatency',
+    '-c:a': 'aac',
+    '-ar': 44100,
+    '-f': 'flv',
   },
   // app config
   config: {

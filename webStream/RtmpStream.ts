@@ -21,7 +21,7 @@ export default class RtmpStream {
 
     this.main.log.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
 
-    const ffmpeg = new Ffmpeg(ffmpegParams);
+    const ffmpeg = new Ffmpeg(this.main.log.debug, ffmpegParams);
 
     this.ffmpeg = ffmpeg;
     // start stream

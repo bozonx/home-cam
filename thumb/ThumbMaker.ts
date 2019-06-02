@@ -24,7 +24,9 @@ export default class ThumbMaker {
 
     this.main.log.info(`==> starting ffmpeg thumb maker from ${ffmpegParams.i} to ${this.makeDstFilePath()}`);
 
-    const ffmpeg = new Ffmpeg(ffmpegParams);
+    await this.main.os.mkdirP(this.makeDstDir());
+
+    const ffmpeg = new Ffmpeg(this.main.log.debug, ffmpegParams);
 
     this.ffmpeg = ffmpeg;
     // start stream
@@ -58,7 +60,7 @@ export default class ThumbMaker {
     );
 
     return {
-      'i': `"${srcUrl}"`,
+      '-i': `"${srcUrl}"`,
       '-y': undefined,
       '-f': 'image2',
       '-r': `1/${cam.thumb.updateIntervalSec}`,
@@ -69,11 +71,17 @@ export default class ThumbMaker {
 
   private makeDstFilePath(): string {
     return path.join(
+      this.makeDstDir(),
+      THUMB_FILE_NAME
+    );
+  }
+
+  private makeDstDir(): string {
+    return path.join(
       this.main.config.workDir,
       WWW_ROOT_DIR,
       THUMBS_DIR,
-      this.camName,
-      THUMB_FILE_NAME
+      this.camName
     );
   }
 

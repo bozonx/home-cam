@@ -6,6 +6,7 @@ import {StdHandler} from '../lib/helpers/SpawnProcess';
 export default class Ffmpeg {
   private readonly stdoutEvents = new IndexedEvents<StdHandler>();
   private readonly stderrEvents = new IndexedEvents<StdHandler>();
+  private readonly logDebug: (msg: string) => void;
   private readonly params: {[index: string]: any};
   private readonly restartTimeout?: number;
   private _proc?: RestartedProcess;
@@ -14,7 +15,8 @@ export default class Ffmpeg {
   }
 
 
-  constructor(params: {[index: string]: any}, restartTimeout?: number) {
+  constructor(logDebug: (msg: string) => void, params: {[index: string]: any}, restartTimeout?: number) {
+    this.logDebug = logDebug;
     this.params = params;
     this.restartTimeout = restartTimeout;
   }
@@ -27,6 +29,8 @@ export default class Ffmpeg {
     const params: string[] = this.makeParams(this.params);
     const cmd: string = `/usr/bin/ffmpeg ${params.join(' ')}`;
     const cwd = process.cwd();
+
+    this.logDebug(`Starting ffmpeg on working dir: "${cwd}": ${cmd}`);
 
     this._proc = new RestartedProcess(cmd, cwd, this.restartTimeout);
 
@@ -58,7 +62,7 @@ export default class Ffmpeg {
       let paramStr: string;
 
       if (params[key]) {
-        paramStr = `-${key} ${params[key]}`;
+        paramStr = `${key} ${params[key]}`;
       }
       else {
         paramStr = key;
