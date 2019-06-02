@@ -46,7 +46,7 @@ Params
           # make image per seconds
           makeImage: 300
           # update per seconds
-          updateInterval: 5
+          updateIntervalSec: 5
     config:
       defaults:
         mainStream:
@@ -57,7 +57,7 @@ Params
           width: 300
           height: 169
           makeImage: 300
-          updateInterval: 5
+          updateIntervalSec: 5
           frameRate: 25
       ui:
         host: 0.0.0.0

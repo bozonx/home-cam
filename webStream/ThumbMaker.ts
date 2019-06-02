@@ -1,7 +1,10 @@
+import * as path from 'path';
+
 import Ffmpeg from './Ffmpeg';
 import Main from './Main';
 import {CamConfig} from '../lib/interfaces/MainConfig';
 import {makeUrl} from '../lib/helpers/helpers';
+import {THUMB_FILE_NAME, THUMBS_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
 
 
 export default class ThumbMaker {
@@ -58,17 +61,20 @@ export default class ThumbMaker {
       'i': `"${srcUrl}"`,
       '-y': undefined,
       '-f': 'image2',
-      // TODO: set seconds
-      '-r': '1/10',
+      '-r': `1/${cam.thumb.updateIntervalSec}`,
       '-update': '1',
       [this.makeDstFilePath()]: undefined,
     };
   }
 
   private makeDstFilePath(): string {
-    // TODO: make file path
-    // TODO: use work dir
-    return `img.jpg`;
+    return path.join(
+      this.main.config.workDir,
+      WWW_ROOT_DIR,
+      THUMBS_DIR,
+      this.camName,
+      THUMB_FILE_NAME
+    );
   }
 
 }
