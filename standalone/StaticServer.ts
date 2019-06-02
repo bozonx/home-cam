@@ -5,7 +5,6 @@ import * as serveStatic from 'serve-static';
 import * as finalhandler from 'finalhandler';
 
 import {WWW_ROOT_DIR} from '../lib/helpers/constants';
-import {callPromised} from '../lib/helpers/helpers';
 import Context from '../lib/context/Context';
 import IndexedEvents from '../lib/helpers/IndexedEvents';
 
@@ -23,12 +22,10 @@ export default class StaticServer {
     this.context = context;
   }
 
-  async destroy() {
+  destroy() {
     this.requestEvents.removeAll();
 
-    if (!this.server) return;
-
-    await callPromised(this.server.close);
+    this.server && this.server.close();
   }
 
 
@@ -43,10 +40,13 @@ export default class StaticServer {
       serve(req as any, res as any, finalhandler(req, res));
     });
 
-    this.server.listen(
-      this.context.config.staticServer.port,
-      this.context.config.staticServer.host,
-    );
+    await new Promise((resolve) => {
+      this.server && this.server.listen(
+        this.context.config.staticServer.port,
+        this.context.config.staticServer.host,
+        resolve
+      );
+    });
 
     this.server.on('request', (request: IncomingMessage, response: ServerResponse) => {
       this.requestEvents.emit(request, response);

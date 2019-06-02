@@ -72,7 +72,7 @@ export default class StandAlone {
     this.context.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
     this.context.log.info(`--> stopping static server`);
-    await this.staticServer.destroy();
+    this.staticServer.destroy();
   }
 
 }

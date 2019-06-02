@@ -37,10 +37,10 @@ export default class WebStreamController {
   handleStreamOpenConnection = async (streamPath: string) => {
     const camName: string = splitLastElement(streamPath, '/')[0];
 
-    this.context.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
-
     // don't run if it has been started previously
     if (this.isRtmpStreamRunning(camName)) return;
+
+    this.context.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
 
     try {
       await this.startRtmpStream(camName);
