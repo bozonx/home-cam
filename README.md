@@ -104,7 +104,7 @@ Start
 
     docker run --rm -it -p 8081:8081 -v ${PWD}/test/testConfig.yaml:/app/config.yaml:ro --name home-cam home-cam-server
 
-Install on raspberry ip
+Install on raspberry pi
 
     curl -s https://raw.githubusercontent.com/bozonx/home-cam/master/dockerFiles/home-cam-server/Dockerfile | docker build -t home-cam-server -
     
