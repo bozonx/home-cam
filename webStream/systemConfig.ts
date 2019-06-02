@@ -22,7 +22,9 @@ export default {
     },
     //rtspStream: {},
     //browserStream: {},
-    //thumb: {},
+    thumb: {
+      updateIntervalSec: 10,
+    },
   },
   rtmpDefaults,
   ffmpegDefaults: {

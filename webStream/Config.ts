@@ -57,7 +57,7 @@ export default class Config {
       // TODO: prepare it
       staticServer: preConfig.staticServer,
       config: this.makeCommonConfig(preConfig),
-    }
+    };
   }
 
 

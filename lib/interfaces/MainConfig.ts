@@ -30,10 +30,10 @@ export interface CamConfig {
   browserStream: StreamParams;
   thumb: {
     // Make image if someone is viewing it. In seconds
-    updateIntervalSec: 10
+    updateIntervalSec: number;
   };
   // options for ffmpeg RTMP stream. If isn't set then default compression will be used
-  ffmpeg?: {[index: string]: any},
+  ffmpeg?: {[index: string]: any};
 }
 
 export interface RtmpConfig {
