@@ -5,7 +5,7 @@ import Main from '../webStream/Main';
 
 export default class StaticServer {
   private readonly main: Main;
-  private readonly server: StaticSrv;
+  private readonly server: typeof StaticSrv;
 
 
   constructor(main: Main) {
@@ -34,11 +34,9 @@ export default class StaticServer {
 
 
   start() {
-
-
-    this.server.start(function () {
-      console.log('Server listening to', server.port);
-    });
+    // this.server.start(function () {
+    //   console.log('Server listening to', server.port);
+    // });
   }
 
 

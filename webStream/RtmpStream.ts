@@ -55,7 +55,7 @@ export default class RtmpStream {
     );
 
     return {
-      'i': `"${srcUrl}"`,
+      '-i': `"${srcUrl}"`,
       ...ffmpegProps,
       [this.makeDstUrl()]: undefined,
     };
