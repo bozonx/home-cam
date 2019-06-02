@@ -1,6 +1,6 @@
-import RestartedProcess from './RestartedProcess';
-import IndexedEvents from '../lib/helpers/IndexedEvents';
-import {StdHandler} from '../lib/helpers/SpawnProcess';
+import RestartedProcess from '../../webStream/RestartedProcess';
+import IndexedEvents from './IndexedEvents';
+import {StdHandler} from './SpawnProcess';
 
 
 export default class Ffmpeg {

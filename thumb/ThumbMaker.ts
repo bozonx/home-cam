@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import Ffmpeg from '../webStream/Ffmpeg';
+import Ffmpeg from '../lib/helpers/Ffmpeg';
 import Main from '../webStream/Main';
 import {CamConfig} from '../lib/interfaces/MainConfig';
 import {makeUrl} from '../lib/helpers/helpers';
