@@ -8,6 +8,9 @@
  */
 
 
+let uniqIndex = 0;
+
+
 class FullViewModal {
   // this is persistent element
   _modalRootId= 'home-cam__modal-root';
@@ -108,7 +111,7 @@ class Camera {
     this._rootEl = rootEl;
     this._fullViewModal = fullViewModal;
     this._params = params;
-    this._updatingIntervalSec = this.defaultUpdatingIntervalSec || params.thumbUpdateIntervalSec;
+    this._updatingIntervalSec = params.thumbUpdateIntervalSec || this.defaultUpdatingIntervalSec;
     this._imgEl = document.createElement('img');
   }
 
@@ -166,7 +169,15 @@ class Camera {
   }
 
   _updateThumb() {
-    this._imgEl.setAttribute('src', this._params.thumbUrl);
+    this._imgEl.setAttribute('src', `${this._params.thumbUrl}?s=${this._makeUniqIndex()}`);
+  }
+
+  _makeUniqIndex() {
+    uniqIndex++;
+
+    if (uniqIndex >= 1024) uniqIndex = 0;
+
+    return uniqIndex;
   }
 
 }
