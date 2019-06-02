@@ -1,13 +1,13 @@
-import Config from '../lib/common/Config';
+import Config from '../lib/context/Config';
 import BrowserStream from './BrowserStream';
 import {splitLastElement} from '../lib/helpers/helpers';
-import systemConfig from '../lib/common/systemConfig';
+import systemConfig from '../lib/context/systemConfig';
 import Logger from '../lib/interfaces/Logger';
 import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from '../ui/StaticServer';
 import MakeUi from '../ui/MakeUi';
-import Os from '../lib/helpers/Os';
+import Os from '../lib/context/Os';
 import Cameras from './Cameras';
 
 

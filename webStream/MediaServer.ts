@@ -1,7 +1,7 @@
 const NodeMediaServer = require('node-media-server');
 
-import LogLevel from '../interfaces/LogLevel';
-import IndexedEventEmitter from './IndexedEventEmitter';
+import LogLevel from '../lib/interfaces/LogLevel';
+import IndexedEventEmitter from '../lib/helpers/IndexedEventEmitter';
 
 
 export interface RequestArgs {

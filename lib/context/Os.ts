@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import * as shelljs from 'shelljs';
-import {callPromised} from './helpers';
-import {ENCODE} from './constants';
+import {callPromised} from '../helpers/helpers';
+import {ENCODE} from '../helpers/constants';
 
 
 export default class Os {

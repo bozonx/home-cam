@@ -2,7 +2,7 @@ import * as yargs from 'yargs';
 
 import Main from './Main';
 import LogLevel, {LOG_LEVELS} from '../lib/interfaces/LogLevel';
-import ConsoleLogger from '../lib/helpers/ConsoleLogger';
+import ConsoleLogger from '../lib/context/ConsoleLogger';
 
 
 async function start() {

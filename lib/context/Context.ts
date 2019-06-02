@@ -2,7 +2,7 @@ import Config from './Config';
 import Logger from '../interfaces/Logger';
 import systemConfig from './systemConfig';
 import LogLevel from '../interfaces/LogLevel';
-import Os from '../helpers/Os';
+import Os from './Os';
 
 
 export default class Context {
