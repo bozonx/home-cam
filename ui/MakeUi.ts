@@ -32,7 +32,7 @@ export default class MakeUi {
   async make() {
     const uiDir = path.join(this.context.config.workDir, WWW_ROOT_DIR);
     const camViewDirDir = path.join(uiDir, 'cam-view');
-    const indexHtmlPath = path.join(uiDir, 'standaloneStarter.ts.html');
+    const indexHtmlPath = path.join(uiDir, 'index.html');
     const indexHtml = this.makeIndexHtml();
 
     await this.context.os.mkdirP(camViewDirDir);
