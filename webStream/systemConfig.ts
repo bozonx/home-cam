@@ -16,6 +16,11 @@ export default {
     host: 'localhost',
     port: 8081,
   },
+  staticServer: {
+    protocol: 'http',
+    host: 'localhost',
+    port: 8082,
+  },
   camDefaults: {
     src: {
       protocol: 'rtsp',

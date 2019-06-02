@@ -15,6 +15,9 @@ export default class Config {
   get browserStreamServer(): CommonServerConfig {
     return (this.mainConfig as any).browserStreamServer;
   }
+  get staticServer(): CommonServerConfig {
+    return (this.mainConfig as any).staticServer;
+  }
   get rtmp(): RtmpConfig {
     return (this.mainConfig as any).rtmp;
   }
@@ -56,7 +59,7 @@ export default class Config {
       // TODO: prepare it
       rtspStreamServer: preConfig.rtspStreamServer,
       // TODO: prepare it
-      staticServer: preConfig.staticServer,
+      staticServer: this.prepareStaticServer(preConfig),
       config: this.makeCommonConfig(preConfig),
     };
   }
@@ -93,6 +96,10 @@ export default class Config {
 
   private prepareBrowserStreamServer(preConfig: {[index: string]: any}): CommonServerConfig {
     return _.defaultsDeep({}, preConfig.browserStreamServer, this.main.systemConfig.browserStreamServer);
+  }
+
+  private prepareStaticServer(preConfig: {[index: string]: any}): CommonServerConfig {
+    return _.defaultsDeep({}, preConfig.staticServer, this.main.systemConfig.staticServer);
   }
 
   private prepareRtmp(preConfig: {[index: string]: any}): RtmpConfig {

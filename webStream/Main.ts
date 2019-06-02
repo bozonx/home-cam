@@ -50,7 +50,7 @@ export default class Main {
     this.log.info(`===> making UI`);
     await this.makeUi.make();
     this.log.info(`===> starting static server`);
-    this.staticServer.start();
+    await this.staticServer.start();
     this.log.info(`===> starting cameras services`);
     await this.cameras.start();
 

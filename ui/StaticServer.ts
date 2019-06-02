@@ -1,43 +1,43 @@
+import * as path from 'path';
+
 const StaticSrv = require('static-server');
 
 import Main from '../webStream/Main';
+import {WWW_ROOT_DIR} from '../lib/helpers/constants';
+import {callPromised} from '../lib/helpers/helpers';
 
 
 export default class StaticServer {
   private readonly main: Main;
-  private readonly server: typeof StaticSrv;
+  private server?: typeof StaticSrv;
 
 
   constructor(main: Main) {
     this.main = main;
-
-    this.server = new StaticSrv({
-      // TODO: add
-      rootPath: '.',            // required, the root of the server file tree
-      // TODO: add
-      port: 1337,               // required, the port to listen
-      //name: 'my-http-server',   // optional, will set "X-Powered-by" HTTP header
-      // TODO: add
-      host: '10.0.0.100',       // optional, defaults to any interface
-      cors: '*',                // optional, defaults to undefined
-      //followSymlink: true,      // optional, defaults to a 404 error
-      // templates: {
-      //   index: 'foo.html',      // optional, defaults to 'index.html'
-      //   notFound: '404.html'    // optional, defaults to undefined
-      // }
-    });
   }
 
   destroy() {
-    // TODO: add
+    if (!this.server) return;
+
+    this.server.stop();
   }
 
 
-  start() {
-    // this.server.start(function () {
-    //   console.log('Server listening to', server.port);
-    // });
+  async start() {
+    this.server = new StaticSrv({
+      rootPath: this.makeWwwDir(),
+      host: this.main.config.staticServer.host,
+      port: this.main.config.staticServer.port,
+      cors: '*',
+    });
+
+    await callPromised(this.server.start);
+
+    this.main.log.info(`Static server listening to "${this.main.config.staticServer.host}:${this.main.config.staticServer.port}"`);
   }
 
+  private makeWwwDir(): string {
+    return path.join(this.main.config.workDir, WWW_ROOT_DIR);
+  }
 
 }
