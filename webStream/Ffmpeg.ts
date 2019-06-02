@@ -19,6 +19,7 @@ export default class Ffmpeg {
     this.restartTimeout = restartTimeout;
   }
 
+
   async start() {
     // TODO: check ffmpeg exist
     // TODO: read whereis - use abs path

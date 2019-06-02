@@ -1,10 +1,10 @@
-import {CamConfig} from '../lib/interfaces/MainConfig';
-import {makeUrl} from '../lib/helpers/helpers';
 import Ffmpeg from './Ffmpeg';
 import Main from './Main';
+import {CamConfig} from '../lib/interfaces/MainConfig';
+import {makeUrl} from '../lib/helpers/helpers';
 
 
-export default class RtmpStream {
+export default class ThumbMaker {
   private ffmpeg?: Ffmpeg;
   private readonly camName: string;
   private readonly main: Main;
@@ -19,7 +19,7 @@ export default class RtmpStream {
   async start() {
     const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
 
-    this.main.log.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
+    this.main.log.info(`==> starting ffmpeg thumb maker from ${ffmpegParams.i} to ${this.makeDstFilePath()}`);
 
     const ffmpeg = new Ffmpeg(ffmpegParams);
 
@@ -41,10 +41,10 @@ export default class RtmpStream {
   }
 
 
+  // ffmpeg -i "rtsp://192.168.88.33/cam/realmonitor?channel=main&subtype=1" -y -f image2 -r 1/30 -update 1 img.jpg
   private makeFrmpegParams(): {[index: string]: any} {
     const cam: CamConfig = this.main.config.cams[this.camName];
     // use ffmpeg params from cam config or use defaults
-    const ffmpegProps = cam.ffmpeg || this.main.systemConfig.ffmpegDefaults;
     const srcUrl = makeUrl(
       cam.src.protocol,
       cam.src.host,
@@ -56,13 +56,19 @@ export default class RtmpStream {
 
     return {
       'i': `"${srcUrl}"`,
-      ...ffmpegProps,
-      [this.makeDstUrl()]: undefined,
+      '-y': undefined,
+      '-f': 'image2',
+      // TODO: set seconds
+      '-r': '1/10',
+      '-update': '1',
+      [this.makeDstFilePath()]: undefined,
     };
   }
 
-  private makeDstUrl(): string {
-    return `"rtmp://localhost/live/${this.camName}"`;
+  private makeDstFilePath(): string {
+    // TODO: make file path
+    // TODO: use work dir
+    return `img.jpg`;
   }
 
 }
