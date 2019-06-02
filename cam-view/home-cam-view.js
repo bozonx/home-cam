@@ -20,6 +20,7 @@ class FullViewModal {
   _openEventName = 'modal-open';
   _closeEventName = 'modal-close';
   _modalTpl = `<div id="home-cam__modal">` +
+    `<div id="home-cam__loader"><div>Connecting ...</div></div>` +
     `<div id="home-cam__body">` +
     //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
     `<video id="${this._streamElId}"></video>` +
