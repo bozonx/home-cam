@@ -59,8 +59,11 @@ export default class MakeUi {
 
     for (let camName of Object.keys(this.main.config.cams)) {
       body += `placeCam('#cam0', {\n` +
-        `thumbUrl: '${this.makeThimbImgPath(camName)}',\n` +
         `streamUrl: '${this.main.config.getBrowserStreamBaseUrl()}/live/${camName}.flv',\n` +
+        `thumbUrl: '${this.makeThimbImgPath(camName)}',\n` +
+        `thumbWidth: '${this.makeThimbImgPath(camName)}',\n` +
+        `thumbHeight: '${this.makeThimbImgPath(camName)}',\n` +
+        `thumbUpdateIntervalSec: '${this.makeThimbImgPath(camName)}',\n` +
       `});\n`;
     }
 

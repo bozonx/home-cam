@@ -21,11 +21,6 @@ export default {
       protocol: 'rtsp',
       port: 554,
     },
-    //rtspStream: {},
-    //browserStream: {},
-    thumb: {
-      updateIntervalSec: 10,
-    },
   },
   rtmpDefaults,
   ffmpegDefaults: {
@@ -35,6 +30,9 @@ export default {
     '-c:a': 'aac',
     '-ar': 44100,
     '-f': 'flv',
+  },
+  thumbDefaults: {
+    updateIntervalSec: 10,
   },
   // app config
   config: {

@@ -4,7 +4,7 @@
  * * thumbUrl - url to thumb jpeg which is updating. Required
  * * thumbWidth - width of thumb. Default is 300
  * * thumbHeight - height of thumb. Default is 169
- * * thumbUpdatingIntervalSec - interval between updating of thumb in seconds. Default is 10.
+ * * thumbUpdateIntervalSec - interval between updating of thumb in seconds. Default is 10.
  */
 
 
@@ -108,7 +108,7 @@ class Camera {
     this._rootEl = rootEl;
     this._fullViewModal = fullViewModal;
     this._params = params;
-    this._updatingIntervalSec = this.defaultUpdatingIntervalSec || params.thumbUpdatingIntervalSec;
+    this._updatingIntervalSec = this.defaultUpdatingIntervalSec || params.thumbUpdateIntervalSec;
     this._imgEl = document.createElement('img');
   }
 

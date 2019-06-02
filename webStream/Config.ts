@@ -79,7 +79,16 @@ export default class Config {
   }
 
   private prepareCam(preConfig: {[index: string]: any}, preCam: CamConfig): CamConfig {
-    return _.defaultsDeep({}, preCam, preConfig.camDefaults, this.main.systemConfig.camDefaults);
+    const camConfig: CamConfig = _.defaultsDeep(
+      {},
+      preCam,
+      preConfig.camDefaults,
+      this.main.systemConfig.camDefaults
+    );
+
+    camConfig.thumb = _.defaultsDeep({}, camConfig.thumb, this.main.systemConfig.thumbDefaults);
+
+    return camConfig;
   }
 
   private prepareBrowserStreamServer(preConfig: {[index: string]: any}): CommonServerConfig {

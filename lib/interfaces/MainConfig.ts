@@ -11,6 +11,13 @@ export interface StreamParams {
   height?: number;
 }
 
+export interface ThumbConfig {
+  width: number;
+  height: number;
+  // Make image if someone is viewing it. In seconds
+  updateIntervalSec: number;
+}
+
 export interface CamConfig {
   src: {
     // one of supported src protocols
@@ -28,10 +35,7 @@ export interface CamConfig {
   };
   rtspStream: StreamParams;
   browserStream: StreamParams;
-  thumb: {
-    // Make image if someone is viewing it. In seconds
-    updateIntervalSec: number;
-  };
+  thumb: ThumbConfig;
   // options for ffmpeg RTMP stream. If isn't set then default compression will be used
   ffmpeg?: {[index: string]: any};
 }
