@@ -5,7 +5,7 @@ import LogLevel from './lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './ui/StaticServer';
 import MakeUi from './ui/MakeUi';
-import Cameras from './webStream/Cameras';
+import WebStreamService from './webStream/WebStreamService';
 import Context from './lib/context/Context';
 
 
@@ -15,7 +15,7 @@ export default class StandAlone {
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
   private readonly makeUi: MakeUi;
-  private readonly cameras: Cameras;
+  private readonly cameras: WebStreamService;
 
 
   constructor(
@@ -28,7 +28,7 @@ export default class StandAlone {
     this.browserStream = new BrowserStream(this.context);
     this.staticServer = new StaticServer(this.context);
     this.makeUi = new MakeUi(this.context);
-    this.cameras = new Cameras(this.context);
+    this.cameras = new WebStreamService(this.context);
   }
 
 
