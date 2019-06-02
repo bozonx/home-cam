@@ -1,18 +1,21 @@
 import * as path from 'path';
 import * as http from 'http';
-import {Server} from 'http';
+import {IncomingMessage, Server, ServerResponse} from 'http';
 import * as serveStatic from 'serve-static';
 import * as finalhandler from 'finalhandler';
-
-//const StaticSrv = require('static-server');
 
 import {WWW_ROOT_DIR} from '../lib/helpers/constants';
 import {callPromised} from '../lib/helpers/helpers';
 import Context from '../lib/context/Context';
+import IndexedEvents from '../lib/helpers/IndexedEvents';
+
+
+type RequestHandler = (request: IncomingMessage, response: ServerResponse) => void;
 
 
 export default class StaticServer {
   private readonly context: Context;
+  private readonly requestEvents = new IndexedEvents<RequestHandler>();
   private server?: Server;
 
 
@@ -21,40 +24,33 @@ export default class StaticServer {
   }
 
   async destroy() {
+    this.requestEvents.removeAll();
+
     if (!this.server) return;
 
     await callPromised(this.server.close);
   }
 
 
+  onRequest(cb: RequestHandler): number {
+    return this.requestEvents.addListener(cb);
+  }
+
   async start() {
-    const serve = serveStatic(this.makeWebDir(), { 'index': ['standaloneStarter.ts.html', 'standaloneStarter.ts.htm'] });
+    const serve = serveStatic(this.makeWebDir(), { 'index': ['index.html', 'index.htm'] });
 
     this.server = http.createServer((req, res) => {
       serve(req as any, res as any, finalhandler(req, res));
     });
-
-    // await callPromised(
-    //   this.server.listen,
-    //   this.context.config.staticServer.port,
-    //   this.context.config.staticServer.host,
-    // );
-
-    // TODO: use promise
 
     this.server.listen(
       this.context.config.staticServer.port,
       this.context.config.staticServer.host,
     );
 
-    // this.server = new StaticSrv({
-    //   rootPath: this.makeWebDir(),
-    //   host: this.context.config.staticServer.host,
-    //   port: this.context.config.staticServer.port,
-    //   cors: '*',
-    // });
-    //
-    // await callPromised(this.server.start);
+    this.server.on('request', (request: IncomingMessage, response: ServerResponse) => {
+      this.requestEvents.emit(request, response);
+    });
 
     this.context.log.info(`Static server listening to "${this.context.config.staticServer.host}:${this.context.config.staticServer.port}"`);
   }

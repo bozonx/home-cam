@@ -18,6 +18,13 @@ export default class ThumbMaker {
     this.camName = camName;
   }
 
+  destroy() {
+    if (!this.ffmpeg) return;
+
+    this.ffmpeg.destroy();
+    delete this.ffmpeg;
+  }
+
 
   async start() {
     const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
@@ -36,13 +43,6 @@ export default class ThumbMaker {
     ffmpeg.onStdOut(this.context.log.debug);
     // print stderr to console
     ffmpeg.onError(this.context.log.debug)
-  }
-
-  destroy() {
-    if (!this.ffmpeg) return;
-
-    this.ffmpeg.destroy();
-    delete this.ffmpeg;
   }
 
 
