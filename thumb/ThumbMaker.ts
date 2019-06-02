@@ -1,41 +1,41 @@
 import * as path from 'path';
 
 import Ffmpeg from '../lib/helpers/Ffmpeg';
-import Main from '../webStream/Main';
 import {CamConfig} from '../lib/interfaces/MainConfig';
 import {makeUrl} from '../lib/helpers/helpers';
 import {THUMB_FILE_NAME, THUMBS_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
+import Context from '../lib/context/Context';
 
 
 export default class ThumbMaker {
   private ffmpeg?: Ffmpeg;
   private readonly camName: string;
-  private readonly main: Main;
+  private readonly context: Context;
 
 
-  constructor(main: Main, camName: string) {
+  constructor(context: Context, camName: string) {
+    this.context = context;
     this.camName = camName;
-    this.main = main;
   }
 
 
   async start() {
     const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
 
-    this.main.log.info(`==> starting ffmpeg thumb maker from ${ffmpegParams.i} to ${this.makeDstFilePath()}`);
+    this.context.log.info(`==> starting ffmpeg thumb maker from ${ffmpegParams.i} to ${this.makeDstFilePath()}`);
 
-    await this.main.os.mkdirP(this.makeDstDir());
+    await this.context.os.mkdirP(this.makeDstDir());
 
-    const ffmpeg = new Ffmpeg(this.main.log.debug, ffmpegParams);
+    const ffmpeg = new Ffmpeg(this.context.log.debug, ffmpegParams);
 
     this.ffmpeg = ffmpeg;
     // start stream
     await ffmpeg.start();
 
     // print stdout in debug mode
-    ffmpeg.onStdOut(this.main.log.debug);
+    ffmpeg.onStdOut(this.context.log.debug);
     // print stderr to console
-    ffmpeg.onError(this.main.log.debug)
+    ffmpeg.onError(this.context.log.debug)
   }
 
   destroy() {
@@ -48,7 +48,7 @@ export default class ThumbMaker {
 
   // ffmpeg -i "rtsp://192.168.88.33/cam/realmonitor?channel=main&subtype=1" -y -f image2 -r 1/30 -update 1 img.jpg
   private makeFrmpegParams(): {[index: string]: any} {
-    const cam: CamConfig = this.main.config.cams[this.camName];
+    const cam: CamConfig = this.context.config.cams[this.camName];
     // use ffmpeg params from cam config or use defaults
     const srcUrl = makeUrl(
       cam.src.protocol,
@@ -79,7 +79,7 @@ export default class ThumbMaker {
 
   private makeDstDir(): string {
     return path.join(
-      this.main.config.workDir,
+      this.context.config.workDir,
       WWW_ROOT_DIR,
       THUMBS_DIR,
       this.camName

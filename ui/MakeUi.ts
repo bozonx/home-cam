@@ -4,6 +4,7 @@ import * as path from 'path';
 import Main from '../webStream/Main';
 import {REPO_ROOT, THUMB_FILE_NAME, THUMBS_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
 import {CamConfig} from '../lib/interfaces/MainConfig';
+import Context from '../lib/context/Context';
 
 
 const INDEX_HTML_TPL = `<!doctype html>
@@ -21,28 +22,28 @@ const INDEX_HTML_TPL = `<!doctype html>
 
 
 export default class MakeUi {
-  private readonly main: Main;
+  private readonly context: Context;
 
 
-  constructor(main: Main) {
-    this.main = main;
+  constructor(context: Context) {
+    this.context = context;
   }
 
 
   async make() {
-    const uiDir = path.join(this.main.config.workDir, WWW_ROOT_DIR);
+    const uiDir = path.join(this.context.config.workDir, WWW_ROOT_DIR);
     const camViewDirDir = path.join(uiDir, 'cam-view');
     const indexHtmlPath = path.join(uiDir, 'index.html');
     const indexHtml = this.makeIndexHtml();
 
-    await this.main.os.mkdirP(camViewDirDir);
-    await this.main.os.writeFile(indexHtmlPath, indexHtml);
+    await this.context.os.mkdirP(camViewDirDir);
+    await this.context.os.writeFile(indexHtmlPath, indexHtml);
 
-    await this.main.os.copyFile(
+    await this.context.os.copyFile(
       path.join(REPO_ROOT, 'cam-view', 'home-cam-view.js'),
       path.join(camViewDirDir, 'home-cam-view.js')
     );
-    await this.main.os.copyFile(
+    await this.context.os.copyFile(
       path.join(REPO_ROOT, 'cam-view', 'home-cam-view.css'),
       path.join(camViewDirDir, 'home-cam-view.css')
     );
@@ -52,7 +53,7 @@ export default class MakeUi {
   private makeIndexHtml(): string {
     let body: string = '';
 
-    for (let camName of Object.keys(this.main.config.cams)) {
+    for (let camName of Object.keys(this.context.config.cams)) {
       body += `<div id="cam-${camName}"></div>\n`;
     }
 
@@ -66,15 +67,15 @@ export default class MakeUi {
 
     result += '<script>';
 
-    for (let camName of Object.keys(this.main.config.cams)) {
-      const camConfig: CamConfig = this.main.config.cams[camName];
+    for (let camName of Object.keys(this.context.config.cams)) {
+      const camConfig: CamConfig = this.context.config.cams[camName];
 
       if (!camConfig) {
         throw new Error(`MakeUi.makeIndexHtml: Can't find camera config ${camName}`);
       }
 
       result += _.compact([`placeCam('#cam-${camName}', {`,
-        `streamUrl: '${this.main.config.getBrowserStreamBaseUrl()}/live/${camName}.flv',`,
+        `streamUrl: '${this.context.config.getBrowserStreamBaseUrl()}/live/${camName}.flv',`,
         `thumbUrl: '${this.makeThimbImgPath(camName)}',`,
         camConfig.thumb.width && `thumbWidth: ${camConfig.thumb.width},`,
         camConfig.thumb.height && `thumbHeight: ${camConfig.thumb.height},`,

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as http from 'http';
-import {IncomingMessage, Server} from 'http';
+import {Server} from 'http';
 import * as serveStatic from 'serve-static';
 import * as finalhandler from 'finalhandler';
 
@@ -9,15 +9,16 @@ import * as finalhandler from 'finalhandler';
 import Main from '../webStream/Main';
 import {WWW_ROOT_DIR} from '../lib/helpers/constants';
 import {callPromised} from '../lib/helpers/helpers';
+import Context from '../lib/context/Context';
 
 
 export default class StaticServer {
-  private readonly main: Main;
+  private readonly context: Context;
   private server?: Server;
 
 
-  constructor(main: Main) {
-    this.main = main;
+  constructor(context: Context) {
+    this.context = context;
   }
 
   async destroy() {
@@ -36,31 +37,31 @@ export default class StaticServer {
 
     // await callPromised(
     //   this.server.listen,
-    //   this.main.config.staticServer.port,
-    //   this.main.config.staticServer.host,
+    //   this.context.config.staticServer.port,
+    //   this.context.config.staticServer.host,
     // );
 
     // TODO: use promise
 
     this.server.listen(
-      this.main.config.staticServer.port,
-      this.main.config.staticServer.host,
+      this.context.config.staticServer.port,
+      this.context.config.staticServer.host,
     );
 
     // this.server = new StaticSrv({
     //   rootPath: this.makeWebDir(),
-    //   host: this.main.config.staticServer.host,
-    //   port: this.main.config.staticServer.port,
+    //   host: this.context.config.staticServer.host,
+    //   port: this.context.config.staticServer.port,
     //   cors: '*',
     // });
     //
     // await callPromised(this.server.start);
 
-    this.main.log.info(`Static server listening to "${this.main.config.staticServer.host}:${this.main.config.staticServer.port}"`);
+    this.context.log.info(`Static server listening to "${this.context.config.staticServer.host}:${this.context.config.staticServer.port}"`);
   }
 
   private makeWebDir(): string {
-    return path.join(this.main.config.workDir, WWW_ROOT_DIR);
+    return path.join(this.context.config.workDir, WWW_ROOT_DIR);
   }
 
 }
