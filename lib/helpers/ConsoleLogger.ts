@@ -1,5 +1,5 @@
-import LogLevel from '../lib/interfaces/LogLevel';
-import {calcAllowedLogLevels} from '../lib/helpers/helpers';
+import LogLevel from '../interfaces/LogLevel';
+import {calcAllowedLogLevels} from './helpers';
 
 
 export default class ConsoleLogger {
