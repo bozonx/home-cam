@@ -13,7 +13,7 @@ export default class ThumbMaker {
   private readonly main: Main;
 
 
-  constructor(camName: string, main: Main) {
+  constructor(main: Main, camName: string) {
     this.camName = camName;
     this.main = main;
   }

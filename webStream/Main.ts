@@ -2,13 +2,13 @@ import Config from './Config';
 import BrowserStream from './BrowserStream';
 import {splitLastElement} from '../lib/helpers/helpers';
 import systemConfig from './systemConfig';
-import RtmpStream from './RtmpStream';
 import Logger from '../lib/interfaces/Logger';
 import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './StaticServer';
 import MakeUi from '../ui/MakeUi';
 import Os from '../lib/helpers/Os';
+import Cameras from './Cameras';
 
 
 export default class Main {
@@ -17,10 +17,10 @@ export default class Main {
   readonly systemConfig = systemConfig;
   readonly browserStream: BrowserStream;
   readonly os: Os = new Os();
-  private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
   private readonly makeUi: MakeUi;
+  private readonly cameras: Cameras;
 
 
   constructor(
@@ -34,6 +34,7 @@ export default class Main {
     this.browserStream = new BrowserStream(this);
     this.staticServer = new StaticServer(this);
     this.makeUi = new MakeUi(this);
+    this.cameras = new Cameras(this);
   }
 
 
@@ -44,28 +45,23 @@ export default class Main {
       this.config.config.rtmpStopDelaySec * 1000
     );
 
-    this.log.info(`--> starting browser stream`);
+    this.log.info(`===> starting browser stream`);
     await this.browserStream.start();
-    this.log.info(`--> making UI`);
+    this.log.info(`===> making UI`);
     await this.makeUi.make();
-    this.log.info(`--> starting static server`);
+    this.log.info(`===> starting static server`);
     this.staticServer.start();
+    this.log.info(`===> starting cameras services`);
+    await this.cameras.start();
 
     this.browserStream.onOpenConnection(this.handleBrowserOpenConnection);
     this.browserStream.onCloseConnection(this.handleBrowserCloseConnection);
-
-    // for (let camName of Object.keys(this.config.cams)) {
-    //   await this.startRtmpCamServer(camName);
-    // }
   }
 
 
   destroy() {
     this.log.info(`--> closing ffmpeg RTMP streams`);
-    for (let camName of Object.keys(this.rtmpInstances)) {
-      this.stopRtmpCamServer(camName);
-    }
-
+    this.cameras.destroy();
     this.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
     this.log.info(`--> stopping static server`);
@@ -79,10 +75,10 @@ export default class Main {
     this.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
 
     // don't run if it has been started previously
-    if (this.rtmpInstances[camName]) return;
+    if (this.cameras.isRtmpRunning(camName)) return;
 
     try {
-      await this.startRtmpStream(camName);
+      await this.cameras.startRtmpStream(camName);
     }
     catch (err) {
       this.log.error(err);
@@ -101,21 +97,8 @@ export default class Main {
 
       this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
-      this.stopRtmpCamServer(camName);
+      this.cameras.stopRtmpCamServer(camName);
     });
-  }
-
-  private async startRtmpStream(camName: string) {
-    this.rtmpInstances[camName] = new RtmpStream(camName, this);
-
-    await this.rtmpInstances[camName].start();
-  }
-
-  private stopRtmpCamServer(camName: string) {
-    if (!this.rtmpInstances[camName]) return;
-
-    this.rtmpInstances[camName].destroy();
-    delete this.rtmpInstances[camName];
   }
 
 }
