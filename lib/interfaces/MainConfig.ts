@@ -45,6 +45,7 @@ export interface RtmpConfig {
 }
 
 export interface CommonServerConfig {
+  protocol: string;
   // host to listen to. Default is 0.0.0.0
   host: string;
   // port to listen to

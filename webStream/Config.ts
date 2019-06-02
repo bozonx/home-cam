@@ -4,6 +4,7 @@ import * as path from 'path';
 import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from '../lib/interfaces/MainConfig';
 import Os from '../lib/helpers/Os';
 import Main from './Main';
+import {makeUrl} from '../lib/helpers/helpers';
 
 
 export default class Config {
@@ -58,6 +59,18 @@ export default class Config {
       staticServer: preConfig.staticServer,
       config: this.makeCommonConfig(preConfig),
     };
+  }
+
+  getBrowserStreamBaseUrl() {
+    //http://${this.main.config.browserStreamServer.host}:8081
+    return makeUrl(
+      this.browserStreamServer.protocol,
+      this.browserStreamServer.host,
+      this.browserStreamServer.port,
+      undefined,
+      this.browserStreamServer.user,
+      this.browserStreamServer.password,
+    );
   }
 
 

@@ -12,6 +12,7 @@ const rtmpDefaults: RtmpConfig = {
 
 export default {
   browserStreamServer: {
+    protocol: 'http',
     host: 'localhost',
     port: 8081,
   },
