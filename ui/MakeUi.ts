@@ -3,10 +3,10 @@ import * as path from 'path';
 
 import Main from '../webStream/Main';
 import {REPO_ROOT, THUMB_FILE_NAME, THUMBS_DIR, UI_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
+import {CamConfig} from '../lib/interfaces/MainConfig';
 
 
-const INDEX_HTML_TPL = `
-<!doctype html>
+const INDEX_HTML_TPL = `<!doctype html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="cam-view/home-cam-view.css" />
@@ -31,19 +31,20 @@ export default class MakeUi {
 
   async make() {
     const uiDir = path.join(this.main.config.workDir, WWW_ROOT_DIR, UI_DIR);
+    const camViewDirDir = path.join(uiDir, 'cam-view');
     const indexHtmlPath = path.join(uiDir, 'index.html');
     const indexHtml = this.makeIndexHtml();
 
-    await this.main.os.mkdirP(uiDir);
+    await this.main.os.mkdirP(camViewDirDir);
     await this.main.os.writeFile(indexHtmlPath, indexHtml);
 
     await this.main.os.copyFile(
       path.join(REPO_ROOT, 'cam-view', 'home-cam-view.js'),
-      path.join(uiDir, 'cam-view', 'home-cam-view.js')
+      path.join(camViewDirDir, 'home-cam-view.js')
     );
     await this.main.os.copyFile(
       path.join(REPO_ROOT, 'cam-view', 'home-cam-view.css'),
-      path.join(uiDir, 'cam-view', 'home-cam-view.css')
+      path.join(camViewDirDir, 'home-cam-view.css')
     );
   }
 
@@ -55,26 +56,39 @@ export default class MakeUi {
       body += `<div id="cam-${camName}"></div>\n`;
     }
 
-    body += '<script>';
-
-    for (let camName of Object.keys(this.main.config.cams)) {
-      body += `placeCam('#cam0', {\n` +
-        `streamUrl: '${this.main.config.getBrowserStreamBaseUrl()}/live/${camName}.flv',\n` +
-        `thumbUrl: '${this.makeThimbImgPath(camName)}',\n` +
-        `thumbWidth: '${this.makeThimbImgPath(camName)}',\n` +
-        `thumbHeight: '${this.makeThimbImgPath(camName)}',\n` +
-        `thumbUpdateIntervalSec: '${this.makeThimbImgPath(camName)}',\n` +
-      `});\n`;
-    }
-
-    body += '</script>';
+    body += this.makeScripts();
 
     return _.template(INDEX_HTML_TPL)({ body });
   }
 
+  private makeScripts(): string {
+    let result: string = '';
+
+    result += '<script>';
+
+    for (let camName of Object.keys(this.main.config.cams)) {
+      const camConfig: CamConfig = this.main.config.cams[camName];
+
+      if (!camConfig) {
+        throw new Error(`MakeUi.makeIndexHtml: Can't find camera config ${camName}`);
+      }
+
+      result += _.compact([`placeCam('#cam-${camName}', {`,
+        `streamUrl: '${this.main.config.getBrowserStreamBaseUrl()}/live/${camName}.flv',`,
+        `thumbUrl: '${this.makeThimbImgPath(camName)}',`,
+        camConfig.thumb.width && `thumbWidth: ${camConfig.thumb.width},`,
+        camConfig.thumb.height && `thumbHeight: ${camConfig.thumb.height},`,
+        camConfig.thumb.updateIntervalSec && `thumbUpdateIntervalSec: ${camConfig.thumb.updateIntervalSec},`,
+        `});`]).join('\n');
+    }
+
+    result += '</script>';
+
+    return result;
+  }
+
   private makeThimbImgPath(camName: string): string {
-    return [
-      '/',
+    return '/' + [
       THUMBS_DIR,
       camName,
       THUMB_FILE_NAME,
