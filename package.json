@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "ts-node standalone/standaloneStarter.ts",
+    "start": "ts-node standalone/index.ts",
     "test": "mocha",
     "lint": "tslint -p tsconfig.json"
   },

@@ -1,2 +1,2 @@
 require('ts-node/register');
-require('./index.js');
+require('./standalone/index.ts');
