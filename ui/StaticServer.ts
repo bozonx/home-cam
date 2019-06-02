@@ -28,7 +28,7 @@ export default class StaticServer {
 
 
   async start() {
-    const serve = serveStatic(this.makeWebDir(), { 'index': ['index.html', 'index.htm'] });
+    const serve = serveStatic(this.makeWebDir(), { 'index': ['standaloneStarter.ts.html', 'standaloneStarter.ts.htm'] });
 
     this.server = http.createServer((req, res) => {
       serve(req as any, res as any, finalhandler(req, res));
