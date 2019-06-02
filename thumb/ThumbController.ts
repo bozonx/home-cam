@@ -4,19 +4,19 @@
 
 import RtmpStream from './RtmpStream';
 import ThumbMaker from '../thumb/ThumbMaker';
-import StandAlone from '../StandAlone';
+import Context from '../lib/context/Context';
 
 
-export default class Cameras {
-  private readonly main: StandAlone;
+export default class WebStreamService {
+  private readonly context: Context;
   // they are made only on connection
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
   // they work permanent
   private readonly thumbsMakers: {[index: string]: ThumbMaker} = {};
 
 
-  constructor(main: StandAlone) {
-    this.main = main;
+  constructor(context: Context) {
+    this.context = context;
   }
 
 

@@ -5,17 +5,17 @@ import LogLevel from './lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './ui/StaticServer';
 import MakeUi from './ui/MakeUi';
-import WebStreamService from './webStream/WebStreamService';
+import WebStreamController from './webStream/WebStreamController';
 import Context from './lib/context/Context';
 
 
 export default class StandAlone {
   private readonly context: Context;
   private readonly browserStream: BrowserStream;
-  private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
   private readonly makeUi: MakeUi;
-  private readonly cameras: WebStreamService;
+  private readonly webStreamService: WebStreamController;
+  private stopRtmpDebounce?: (cb: () => void) => void;
 
 
   constructor(
@@ -28,7 +28,7 @@ export default class StandAlone {
     this.browserStream = new BrowserStream(this.context);
     this.staticServer = new StaticServer(this.context);
     this.makeUi = new MakeUi(this.context);
-    this.cameras = new WebStreamService(this.context);
+    this.webStreamService = new WebStreamController(this.context);
   }
 
 
@@ -45,8 +45,6 @@ export default class StandAlone {
     await this.makeUi.make();
     this.context.log.info(`===> starting static server`);
     await this.staticServer.start();
-    this.context.log.info(`===> starting cameras services`);
-    await this.cameras.start();
 
     this.browserStream.onOpenConnection(this.handleBrowserOpenConnection);
     this.browserStream.onCloseConnection(this.handleBrowserCloseConnection);

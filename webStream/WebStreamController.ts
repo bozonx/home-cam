@@ -1,33 +1,17 @@
-/**
- * Start all the needed services for each camera
- */
-
 import RtmpStream from './RtmpStream';
-import ThumbMaker from '../thumb/ThumbMaker';
-import StandAlone from '../StandAlone';
+import Context from '../lib/context/Context';
 
 
-export default class WebStreamService {
-  private readonly main: StandAlone;
+export default class WebStreamController {
+  private readonly context: Context;
   // they are made only on connection
   private readonly rtmpInstances: {[index: string]: RtmpStream} = {};
-  // they work permanent
-  private readonly thumbsMakers: {[index: string]: ThumbMaker} = {};
 
 
-  constructor(main: StandAlone) {
-    this.main = main;
+  constructor(context: Context) {
+    this.context = context;
   }
 
-
-  async start() {
-    for (let camName of Object.keys(this.main.config.cams)) {
-      this.main.log.info(`--> starting thumb maker of camera "${camName}"`);
-      this.thumbsMakers[camName] = new ThumbMaker(this.main, camName);
-
-      await this.thumbsMakers[camName].start();
-    }
-  }
 
   destroy() {
     for (let camName of Object.keys(this.rtmpInstances)) {
