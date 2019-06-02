@@ -1,12 +1,12 @@
-import BrowserStream from './webStream/BrowserStream';
-import Logger from './lib/interfaces/Logger';
-import LogLevel, {LOG_LEVELS} from './lib/interfaces/LogLevel';
-import StaticServer from './ui/StaticServer';
-import MakeUi from './ui/MakeUi';
-import WebStreamController from './webStream/WebStreamController';
-import Context from './lib/context/Context';
-import {listenDestroySignals} from './lib/helpers/helpers';
-import ThumbController from './thumb/ThumbController';
+import BrowserStream from '../webStream/BrowserStream';
+import Logger from '../lib/interfaces/Logger';
+import LogLevel, {LOG_LEVELS} from '../lib/interfaces/LogLevel';
+import StaticServer from '../ui/StaticServer';
+import MakeUi from '../ui/MakeUi';
+import WebStreamController from '../webStream/WebStreamController';
+import Context from '../lib/context/Context';
+import {listenDestroySignals} from '../lib/helpers/helpers';
+import ThumbController from '../thumb/ThumbController';
 
 
 export default class StandAlone {

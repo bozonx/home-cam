@@ -1,8 +1,8 @@
 import * as yargs from 'yargs';
 
-import StandAlone from './StandAlone';
-import LogLevel from './lib/interfaces/LogLevel';
-import ConsoleLogger from './lib/context/ConsoleLogger';
+import StandAlone from './';
+import LogLevel from '../lib/interfaces/LogLevel';
+import ConsoleLogger from '../lib/context/ConsoleLogger';
 
 
 async function start() {
