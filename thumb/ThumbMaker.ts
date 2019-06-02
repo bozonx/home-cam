@@ -29,7 +29,7 @@ export default class ThumbMaker {
   async start() {
     const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
 
-    this.context.log.info(`==> starting ffmpeg thumb maker from ${ffmpegParams.i} to ${this.makeDstFilePath()}`);
+    this.context.log.info(`==> starting ffmpeg thumb maker from ${ffmpegParams['-i']} to ${this.makeDstFilePath()}`);
 
     await this.context.os.mkdirP(this.makeDstDir());
 
