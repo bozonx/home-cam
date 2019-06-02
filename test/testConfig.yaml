@@ -1,3 +1,5 @@
+# ./home-cam --work-dir=./build --log-level=debug ./test/testConfig.yaml
+
 cams:
   smallRoom:
     src:
