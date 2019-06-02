@@ -1,7 +1,7 @@
-import Config from './Config';
+import Config from '../lib/common/Config';
 import BrowserStream from './BrowserStream';
 import {splitLastElement} from '../lib/helpers/helpers';
-import systemConfig from './systemConfig';
+import systemConfig from '../lib/common/systemConfig';
 import Logger from '../lib/interfaces/Logger';
 import LogLevel from '../lib/interfaces/LogLevel';
 import * as _ from 'lodash';
@@ -12,11 +12,7 @@ import Cameras from './Cameras';
 
 
 export default class Main {
-  readonly config: Config;
-  readonly log: Logger;
-  readonly systemConfig = systemConfig;
-  readonly browserStream: BrowserStream;
-  readonly os: Os = new Os();
+  private readonly browserStream: BrowserStream;
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
   private readonly makeUi: MakeUi;
@@ -29,8 +25,6 @@ export default class Main {
     workDir?: string,
     logLevel: LogLevel = 'info'
   ) {
-    this.config = new Config(this, configPath, workDir);
-    this.log = new LoggerClass(logLevel);
     this.browserStream = new BrowserStream(this);
     this.staticServer = new StaticServer(this);
     this.makeUi = new MakeUi(this);

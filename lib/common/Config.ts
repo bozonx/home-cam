@@ -1,10 +1,9 @@
 import * as _ from 'lodash';
 import * as path from 'path';
 
-import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from '../lib/interfaces/MainConfig';
-import Os from '../lib/helpers/Os';
-import Main from './Main';
-import {makeUrl} from '../lib/helpers/helpers';
+import MainConfig, {CamConfig, CommonConfig, CommonServerConfig, RtmpConfig} from '../interfaces/MainConfig';
+import {makeUrl} from '../helpers/helpers';
+import Context from './Context';
 
 
 export default class Config {
@@ -25,23 +24,23 @@ export default class Config {
     return (this.mainConfig as any).config;
   }
   private mainConfig?: MainConfig;
-  private readonly main: Main;
+  private readonly context: Context;
   private readonly configPath: string;
 
 
-  constructor(main: Main, configPath: string, workDir?: string) {
+  constructor(context: Context, configPath: string, workDir?: string) {
     if (!workDir) {
       throw new Error(`ERROR: You have to specify a --work-dir param`);
     }
 
     this.configPath = configPath;
     this.workDir = path.resolve(process.cwd(), workDir);
-    this.main = main;
+    this.context = context;
   }
 
 
   async make() {
-    const preConfig = await this.main.os.loadYamlFile(this.configPath);
+    const preConfig = await this.context.os.loadYamlFile(this.configPath);
 
     this.validateConfig(preConfig);
 
@@ -86,28 +85,28 @@ export default class Config {
       {},
       preCam,
       preConfig.camDefaults,
-      this.main.systemConfig.camDefaults
+      this.context.systemConfig.camDefaults
     );
 
-    camConfig.thumb = _.defaultsDeep({}, camConfig.thumb, this.main.systemConfig.thumbDefaults);
+    camConfig.thumb = _.defaultsDeep({}, camConfig.thumb, this.context.systemConfig.thumbDefaults);
 
     return camConfig;
   }
 
   private prepareBrowserStreamServer(preConfig: {[index: string]: any}): CommonServerConfig {
-    return _.defaultsDeep({}, preConfig.browserStreamServer, this.main.systemConfig.browserStreamServer);
+    return _.defaultsDeep({}, preConfig.browserStreamServer, this.context.systemConfig.browserStreamServer);
   }
 
   private prepareStaticServer(preConfig: {[index: string]: any}): CommonServerConfig {
-    return _.defaultsDeep({}, preConfig.staticServer, this.main.systemConfig.staticServer);
+    return _.defaultsDeep({}, preConfig.staticServer, this.context.systemConfig.staticServer);
   }
 
   private prepareRtmp(preConfig: {[index: string]: any}): RtmpConfig {
-    return _.defaultsDeep({}, preConfig.rtmp, this.main.systemConfig.rtmpDefaults);
+    return _.defaultsDeep({}, preConfig.rtmp, this.context.systemConfig.rtmpDefaults);
   }
 
   private makeCommonConfig(preConfig: {[index: string]: any}): CommonConfig {
-    return _.defaultsDeep({}, preConfig.config, this.main.systemConfig.config);
+    return _.defaultsDeep({}, preConfig.config, this.context.systemConfig.config);
   }
 
 }
