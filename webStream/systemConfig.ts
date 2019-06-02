@@ -37,7 +37,9 @@ export default {
     '-f': 'flv',
   },
   thumbDefaults: {
-    updateIntervalSec: 10,
+    updateIntervalSec: 5,
+    width: 300,
+    height: 169,
   },
   // app config
   config: {

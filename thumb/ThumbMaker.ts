@@ -64,6 +64,7 @@ export default class ThumbMaker {
       '-y': undefined,
       '-f': 'image2',
       '-r': `1/${cam.thumb.updateIntervalSec}`,
+      '-vf': `scale=${cam.thumb.width}:${cam.thumb.height}`,
       '-update': '1',
       [this.makeDstFilePath()]: undefined,
     };
