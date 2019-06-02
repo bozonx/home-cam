@@ -78,13 +78,13 @@ export default class ThumbController {
     this.sessionTimers[camName] = setTimeout(() => {
       delete this.sessionTimers[camName];
       this.stopMaker(camName);
-    }, camConfig.thumb.updateIntervalSec * SESSION_MULTIPLIER);
+    }, camConfig.thumb.updateIntervalSec * SESSION_MULTIPLIER * 1000);
   }
 
   private parseCamNameFromUrl(rawUrl?: string): string | undefined {
     if (!rawUrl) return;
 
-    const regex = new RegExp(`${THUMBS_DIR}/([\w\d\_\-]+)/${THUMB_FILE_NAME}$`);
+    const regex = new RegExp(`${THUMBS_DIR}/([\\w\\d\\_\\-]+)/${THUMB_FILE_NAME}`);
     const match: RegExpMatchArray | null = rawUrl.match(regex);
 
     if (!match || match.length !== 2) return;

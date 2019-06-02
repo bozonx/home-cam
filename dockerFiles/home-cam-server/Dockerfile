@@ -4,12 +4,12 @@ FROM node:11
 #LABEL maintainer "Gabriel Araujo <contact@gbiel.com>"
 
 ENV PRJ_NAME home-cam
-ENV WORKDIR /app
+ENV APPDIR /app
 ENV REPO https://github.com/bozonx/${PRJ_NAME}.git
-ENV PATH $PATH:${WORKDIR}/${PRJ_NAME}
+ENV PATH $PATH:${APPDIR}/${PRJ_NAME}
 
 # Define working directory.
-WORKDIR ${WORKDIR}
+WORKDIR ${APPDIR}
 
 # Install dependencies
 RUN apt-get -yqq update && \
@@ -19,12 +19,12 @@ RUN apt-get -yqq update && \
     apt-get -yqq clean && \
     rm -rf /var/lib/apt/lists/* /var/cache/* /tmp/* /var/tmp/*
 
-RUN mkdir -p ${WORKDIR}
+RUN mkdir -p ${APPDIR}
 
-RUN cd ${WORKDIR} && git clone ${REPO}
-RUN cd ${WORKDIR}/${PRJ_NAME} && npm install -p
+RUN cd ${APPDIR} && git clone ${REPO}
+RUN cd ${APPDIR}/${PRJ_NAME} && npm install -p
 # && npm cache clean
 
-ENTRYPOINT home-cam ${WORKDIR}/config.yaml
+ENTRYPOINT home-cam ${APPDIR}/config.yaml
 
 EXPOSE 8081
