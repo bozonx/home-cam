@@ -4,6 +4,7 @@ import {IncomingMessage, ServerResponse} from 'http';
 import ThumbMaker from '../thumb/ThumbMaker';
 import Context from '../lib/context/Context';
 import {CamConfig} from '../lib/interfaces/MainConfig';
+import {THUMB_FILE_NAME, THUMBS_DIR} from '../lib/helpers/constants';
 
 
 const SESSION_MULTIPLIER = 10;
@@ -81,7 +82,14 @@ export default class ThumbController {
   }
 
   private parseCamNameFromUrl(rawUrl?: string): string | undefined {
-    // TODO: проверить что это именно thumb
+    if (!rawUrl) return;
+
+    const regex = new RegExp(`${THUMBS_DIR}/([\w\d\_\-]+)/${THUMB_FILE_NAME}$`);
+    const match: RegExpMatchArray | null = rawUrl.match(regex);
+
+    if (!match || match.length !== 2) return;
+
+    return match[1];
   }
 
 }
