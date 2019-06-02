@@ -1,12 +1,19 @@
+import Timer = NodeJS.Timer;
+import {IncomingMessage, ServerResponse} from 'http';
+
 import ThumbMaker from '../thumb/ThumbMaker';
 import Context from '../lib/context/Context';
-import {IncomingMessage, ServerResponse} from "http";
+import {CamConfig} from '../lib/interfaces/MainConfig';
+
+
+const SESSION_MULTIPLIER = 10;
 
 
 export default class ThumbController {
   private readonly context: Context;
   // they work permanent
   private readonly thumbsMakers: {[index: string]: ThumbMaker} = {};
+  private readonly sessionTimers: {[index: string]: Timer} = {};
 
 
   constructor(context: Context) {
@@ -15,8 +22,14 @@ export default class ThumbController {
 
   destroy() {
     // TODO: stop session timers
+    for (let camName of Object.keys(this.sessionTimers)) {
+      clearTimeout(this.sessionTimers[camName]);
+      delete this.sessionTimers[camName];
+    }
+
     for (let camName of Object.keys(this.thumbsMakers)) {
       this.stopMaker(camName);
+      delete this.thumbsMakers[camName];
     }
   }
 
@@ -26,7 +39,7 @@ export default class ThumbController {
 
     if (!camName) return;
 
-    // TODO: сделать сессию
+    this.updateSession(camName);
 
     // do nothing if it is running
     if (this.thumbsMakers[camName]) return;
@@ -51,8 +64,20 @@ export default class ThumbController {
   private stopMaker(camName: string) {
     if (!this.thumbsMakers[camName]) return;
 
+    this.context.log.info(`--> stopping thumb maker of camera "${camName}"`);
     this.thumbsMakers[camName].destroy();
     delete this.thumbsMakers[camName];
+  }
+
+  private updateSession(camName: string) {
+    clearTimeout(this.sessionTimers[camName]);
+
+    const camConfig: CamConfig = this.context.config.cams[camName];
+
+    this.sessionTimers[camName] = setTimeout(() => {
+      delete this.sessionTimers[camName];
+      this.stopMaker(camName);
+    }, camConfig.thumb.updateIntervalSec * SESSION_MULTIPLIER);
   }
 
   private parseCamNameFromUrl(rawUrl?: string): string | undefined {
