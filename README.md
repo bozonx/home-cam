@@ -106,5 +106,5 @@ Start
 
 Install on raspberry pi
 
-    curl -s https://raw.githubusercontent.com/bozonx/home-cam/master/dockerFiles/home-cam-server/Dockerfile | docker build -t home-cam-server -
+    curl -s https://raw.githubusercontent.com/bozonx/home-cam/master/dockerFiles/home-cam-server/Dockerfile | docker build --no-cache -t home-cam-server -
     
