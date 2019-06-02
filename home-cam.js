@@ -1,2 +1,2 @@
 require('ts-node/register');
-require('./webStream/index.ts');
+require('./index.js');

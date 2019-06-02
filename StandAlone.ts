@@ -1,17 +1,16 @@
-import Config from './lib/context/Config';
 import BrowserStream from './webStream/BrowserStream';
 import {splitLastElement} from './lib/helpers/helpers';
-import systemConfig from './lib/context/systemConfig';
 import Logger from './lib/interfaces/Logger';
 import LogLevel from './lib/interfaces/LogLevel';
 import * as _ from 'lodash';
 import StaticServer from './ui/StaticServer';
 import MakeUi from './ui/MakeUi';
-import Os from './lib/context/Os';
 import Cameras from './webStream/Cameras';
+import Context from './lib/context/Context';
 
 
 export default class StandAlone {
+  private readonly context: Context;
   private readonly browserStream: BrowserStream;
   private stopRtmpDebounce?: (cb: () => void) => void;
   private readonly staticServer: StaticServer;
@@ -23,29 +22,30 @@ export default class StandAlone {
     configPath: string,
     LoggerClass: new (logLevel: LogLevel) => Logger,
     workDir?: string,
-    logLevel: LogLevel = 'info'
+    logLevel?: LogLevel
   ) {
-    this.browserStream = new BrowserStream(this);
-    this.staticServer = new StaticServer(this);
-    this.makeUi = new MakeUi(this);
-    this.cameras = new Cameras(this);
+    this.context = new Context(configPath, LoggerClass, workDir, logLevel);
+    this.browserStream = new BrowserStream(this.context);
+    this.staticServer = new StaticServer(this.context);
+    this.makeUi = new MakeUi(this.context);
+    this.cameras = new Cameras(this.context);
   }
 
 
   async start() {
-    await this.config.make();
+    await this.context.config.make();
     this.stopRtmpDebounce = _.debounce(
       (cb: () => void) => cb(),
-      this.config.config.rtmpStopDelaySec * 1000
+      this.context.config.config.rtmpStopDelaySec * 1000
     );
 
-    this.log.info(`===> starting browser stream`);
+    this.context.log.info(`===> starting browser stream`);
     await this.browserStream.start();
-    this.log.info(`===> making UI`);
+    this.context.log.info(`===> making UI`);
     await this.makeUi.make();
-    this.log.info(`===> starting static server`);
+    this.context.log.info(`===> starting static server`);
     await this.staticServer.start();
-    this.log.info(`===> starting cameras services`);
+    this.context.log.info(`===> starting cameras services`);
     await this.cameras.start();
 
     this.browserStream.onOpenConnection(this.handleBrowserOpenConnection);
@@ -54,11 +54,11 @@ export default class StandAlone {
 
 
   async destroy() {
-    this.log.info(`--> closing ffmpeg RTMP streams`);
+    this.context.log.info(`--> closing ffmpeg RTMP streams`);
     this.cameras.destroy();
-    this.log.info(`--> closing browser stream`);
+    this.context.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
-    this.log.info(`--> stopping static server`);
+    this.context.log.info(`--> stopping static server`);
     await this.staticServer.destroy();
   }
 
@@ -66,7 +66,7 @@ export default class StandAlone {
   private handleBrowserOpenConnection = async (streamPath: string) => {
     const camName: string = splitLastElement(streamPath, '/')[0];
 
-    this.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
+    this.context.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
 
     // don't run if it has been started previously
     if (this.cameras.isRtmpStreamRunning(camName)) return;
@@ -75,7 +75,7 @@ export default class StandAlone {
       await this.cameras.startRtmpStream(camName);
     }
     catch (err) {
-      this.log.error(err);
+      this.context.log.error(err);
     }
   }
 
@@ -89,7 +89,7 @@ export default class StandAlone {
       // don't stop if someone ans been connected while it waits
       if (this.browserStream.hasAnyConnected(streamPath)) return;
 
-      this.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
+      this.context.log.info(`===> Stopping ffmpeg's rtmp stream for camera "${camName}"`);
 
       this.cameras.stopRtmpCamServer(camName);
     });

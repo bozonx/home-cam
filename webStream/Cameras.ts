@@ -41,7 +41,7 @@ export default class Cameras {
   }
 
   async startRtmpStream(camName: string) {
-    this.rtmpInstances[camName] = new RtmpStream(camName, this.main);
+    this.rtmpInstances[camName] = new RtmpStream(this.main, camName);
 
     await this.rtmpInstances[camName].start();
   }

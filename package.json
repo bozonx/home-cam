@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "ts-node webStream/index.ts",
+    "start": "ts-node index.ts",
     "test": "mocha",
     "lint": "tslint -p tsconfig.json"
   },
