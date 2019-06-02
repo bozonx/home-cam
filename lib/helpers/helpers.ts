@@ -71,3 +71,24 @@ export function calcAllowedLogLevels(logLevel: LogLevel): LogLevel[] {
 
   return LOG_LEVELS.slice(currentLevelIndex) as LogLevel[];
 }
+
+export function listenDestroySignals(destroyTimeoutSec: number, destroy: () => Promise<void>) {
+  const gracefullyDestroy = async () => {
+    setTimeout(() => {
+      console.error(`ERROR: App hasn't been gracefully destroyed during "${destroyTimeoutSec}" seconds`);
+      process.exit(3);
+    }, destroyTimeoutSec * 1000);
+
+    try {
+      await destroy();
+      process.exit(0);
+    }
+    catch (err) {
+      console.error(err);
+      process.exit(2);
+    }
+  };
+
+  process.on('SIGTERM', gracefullyDestroy);
+  process.on('SIGINT', gracefullyDestroy);
+}
