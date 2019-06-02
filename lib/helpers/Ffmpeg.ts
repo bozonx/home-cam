@@ -1,4 +1,4 @@
-import RestartedProcess from '../../webStream/RestartedProcess';
+import RestartedProcess from './RestartedProcess';
 import IndexedEvents from './IndexedEvents';
 import {StdHandler} from './SpawnProcess';
 

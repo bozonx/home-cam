@@ -1,4 +1,4 @@
-import Main from './Main';
+import Main from '../webStream/Main';
 
 export default class StaticServer {
   private readonly main: Main;
