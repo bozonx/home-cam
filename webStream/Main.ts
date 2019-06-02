@@ -75,7 +75,7 @@ export default class Main {
     this.log.info(`===> Starting ffmpeg's RTMP stream for camera "${camName}"`);
 
     // don't run if it has been started previously
-    if (this.cameras.isRtmpRunning(camName)) return;
+    if (this.cameras.isRtmpStreamRunning(camName)) return;
 
     try {
       await this.cameras.startRtmpStream(camName);

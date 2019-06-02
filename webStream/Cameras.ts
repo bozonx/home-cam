@@ -36,12 +36,12 @@ export default class Cameras {
   }
 
 
-  isRtmpRunning(camName: string): boolean {
-    this.cameras.rtmpInstances[camName]
+  isRtmpStreamRunning(camName: string): boolean {
+    return Boolean(this.rtmpInstances[camName]);
   }
 
   async startRtmpStream(camName: string) {
-    this.rtmpInstances[camName] = new RtmpStream(camName, this);
+    this.rtmpInstances[camName] = new RtmpStream(camName, this.main);
 
     await this.rtmpInstances[camName].start();
   }
