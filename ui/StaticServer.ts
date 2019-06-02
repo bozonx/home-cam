@@ -25,7 +25,7 @@ export default class StaticServer {
 
   async start() {
     this.server = new StaticSrv({
-      rootPath: this.makeWwwDir(),
+      rootPath: this.makeWebDir(),
       host: this.main.config.staticServer.host,
       port: this.main.config.staticServer.port,
       cors: '*',
@@ -36,7 +36,7 @@ export default class StaticServer {
     this.main.log.info(`Static server listening to "${this.main.config.staticServer.host}:${this.main.config.staticServer.port}"`);
   }
 
-  private makeWwwDir(): string {
+  private makeWebDir(): string {
     return path.join(this.main.config.workDir, WWW_ROOT_DIR);
   }
 

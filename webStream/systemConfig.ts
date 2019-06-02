@@ -13,12 +13,12 @@ const rtmpDefaults: RtmpConfig = {
 export default {
   browserStreamServer: {
     protocol: 'http',
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 8081,
   },
   staticServer: {
     protocol: 'http',
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 8082,
   },
   camDefaults: {

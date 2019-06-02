@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 
 import Main from '../webStream/Main';
-import {REPO_ROOT, THUMB_FILE_NAME, THUMBS_DIR, UI_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
+import {REPO_ROOT, THUMB_FILE_NAME, THUMBS_DIR, WWW_ROOT_DIR} from '../lib/helpers/constants';
 import {CamConfig} from '../lib/interfaces/MainConfig';
 
 
@@ -30,7 +30,7 @@ export default class MakeUi {
 
 
   async make() {
-    const uiDir = path.join(this.main.config.workDir, WWW_ROOT_DIR, UI_DIR);
+    const uiDir = path.join(this.main.config.workDir, WWW_ROOT_DIR);
     const camViewDirDir = path.join(uiDir, 'cam-view');
     const indexHtmlPath = path.join(uiDir, 'index.html');
     const indexHtml = this.makeIndexHtml();
