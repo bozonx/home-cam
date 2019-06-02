@@ -21,12 +21,12 @@ export default class Cameras {
 
 
   async start() {
-    // for (let camName of Object.keys(this.main.config.cams)) {
-    //   this.main.log.info(`--> starting thumb maker of camera "${camName}"`);
-    //   this.thumbsMakers[camName] = new ThumbMaker(this.main, camName);
-    //
-    //   await this.thumbsMakers[camName].start();
-    // }
+    for (let camName of Object.keys(this.main.config.cams)) {
+      this.main.log.info(`--> starting thumb maker of camera "${camName}"`);
+      this.thumbsMakers[camName] = new ThumbMaker(this.main, camName);
+
+      await this.thumbsMakers[camName].start();
+    }
   }
 
   destroy() {
