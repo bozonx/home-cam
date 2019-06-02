@@ -1,36 +1,36 @@
 import {CamConfig} from '../lib/interfaces/MainConfig';
 import {makeUrl} from '../lib/helpers/helpers';
 import Ffmpeg from '../lib/helpers/Ffmpeg';
-import Main from './Main';
+import Context from '../lib/context/Context';
 
 
 export default class RtmpStream {
+  private readonly context: Context;
   private ffmpeg?: Ffmpeg;
   private readonly camName: string;
-  private readonly main: Main;
 
 
-  constructor(camName: string, main: Main) {
+  constructor(context: Context, camName: string) {
     this.camName = camName;
-    this.main = main;
+    this.context = context;
   }
 
 
   async start() {
     const ffmpegParams: {[index: string]: any} = this.makeFrmpegParams();
 
-    this.main.log.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
+    this.context.log.info(`==> starting ffmpeg rtmp translator from ${ffmpegParams.i} to ${this.makeDstUrl()}`);
 
-    const ffmpeg = new Ffmpeg(this.main.log.debug, ffmpegParams);
+    const ffmpeg = new Ffmpeg(this.context.log.debug, ffmpegParams);
 
     this.ffmpeg = ffmpeg;
     // start stream
     await ffmpeg.start();
 
     // print stdout in debug mode
-    ffmpeg.onStdOut(this.main.log.debug);
+    ffmpeg.onStdOut(this.context.log.debug);
     // print stderr to console
-    ffmpeg.onError(this.main.log.debug);
+    ffmpeg.onError(this.context.log.debug);
   }
 
   destroy() {
@@ -42,9 +42,9 @@ export default class RtmpStream {
 
 
   private makeFrmpegParams(): {[index: string]: any} {
-    const cam: CamConfig = this.main.config.cams[this.camName];
+    const cam: CamConfig = this.context.config.cams[this.camName];
     // use ffmpeg params from cam config or use defaults
-    const ffmpegProps = cam.ffmpeg || this.main.systemConfig.ffmpegDefaults;
+    const ffmpegProps = cam.ffmpeg || this.context.systemConfig.ffmpegDefaults;
     const srcUrl = makeUrl(
       cam.src.protocol,
       cam.src.host,

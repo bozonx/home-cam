@@ -2,32 +2,32 @@ import * as _ from 'lodash';
 
 import IndexedEvents from '../lib/helpers/IndexedEvents';
 import MediaServer, {RequestArgs} from './MediaServer';
-import Main from './Main';
+import Context from '../lib/context/Context';
 
 
 type ConnectionHandler = (streamPath: string, id: string) => void;
 
 
 export default class BrowserStream {
+  private readonly context: Context;
   private readonly openConnectionEvents = new IndexedEvents<ConnectionHandler>();
   private readonly closeConnectionEvents = new IndexedEvents<ConnectionHandler>();
   // like {'/live/smallRoom': ['QNRY4FDA']}
   private readonly connectedClients: {[index: string]: string[]} = {};
-  private readonly main: Main;
   private mediaServer?: MediaServer;
 
 
-  constructor(main: Main) {
-    this.main = main;
+  constructor(context: Context) {
+    this.context = context;
   }
 
   async start() {
     const mediaServer = new MediaServer(
-      this.main.log.logLevel,
-      this.main.config.rtmp,
+      this.context.log.logLevel,
+      this.context.config.rtmp,
       {
         // TODO: set host ??? and other params
-        port: this.main.config.browserStreamServer.port,
+        port: this.context.config.browserStreamServer.port,
         allow_origin: '*'
       }
     );

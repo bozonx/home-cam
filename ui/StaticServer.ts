@@ -6,7 +6,6 @@ import * as finalhandler from 'finalhandler';
 
 //const StaticSrv = require('static-server');
 
-import Main from '../webStream/Main';
 import {WWW_ROOT_DIR} from '../lib/helpers/constants';
 import {callPromised} from '../lib/helpers/helpers';
 import Context from '../lib/context/Context';
