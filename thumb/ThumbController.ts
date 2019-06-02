@@ -13,6 +13,13 @@ export default class ThumbController {
     this.context = context;
   }
 
+  destroy() {
+    // TODO: stop session timers
+    for (let camName of Object.keys(this.thumbsMakers)) {
+      this.stopMaker(camName);
+    }
+  }
+
 
   handleStaticRequest = (request: IncomingMessage, response: ServerResponse) => {
     const camName: string | undefined = this.parseCamNameFromUrl(request.url);
@@ -29,28 +36,13 @@ export default class ThumbController {
   }
 
 
-  // async start() {
-  //   for (let camName of Object.keys(this.context.config.cams)) {
-  //     this.context.log.info(`--> starting thumb maker of camera "${camName}"`);
-  //     this.thumbsMakers[camName] = new ThumbMaker(this.context, camName);
-  //
-  //     await this.thumbsMakers[camName].start();
-  //   }
-  // }
-
-  destroy() {
-    // TODO: stop session timers
-    for (let camName of Object.keys(this.thumbsMakers)) {
-      this.stopMaker(camName);
-    }
-  }
-
-
   isThumbMakerRunning(camName: string): boolean {
     return Boolean(this.thumbsMakers[camName]);
   }
 
   private async startMaker(camName: string) {
+    this.context.log.info(`--> starting thumb maker of camera "${camName}"`);
+
     this.thumbsMakers[camName] = new ThumbMaker(this.context, camName);
 
     await this.thumbsMakers[camName].start();
