@@ -59,13 +59,13 @@ export default class Main {
   }
 
 
-  destroy() {
+  async destroy() {
     this.log.info(`--> closing ffmpeg RTMP streams`);
     this.cameras.destroy();
     this.log.info(`--> closing browser stream`);
     this.browserStream.destroy();
     this.log.info(`--> stopping static server`);
-    this.staticServer.destroy();
+    await this.staticServer.destroy();
   }
 
 

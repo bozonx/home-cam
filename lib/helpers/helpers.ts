@@ -7,11 +7,16 @@ import LogLevel, {LOG_LEVELS} from '../interfaces/LogLevel';
  */
 export function callPromised(method: Function, ...params: any[]): Promise<any> {
   return new Promise((resolve, reject) => {
-    method(...params, (err: Error, data: any) => {
-      if (err) return reject(err);
+    try {
+      method(...params, (err: Error, data: any) => {
+        if (err) return reject(err);
 
-      resolve(data);
-    });
+        resolve(data);
+      });
+    }
+    catch (err) {
+      reject(err);
+    }
   });
 }
 
