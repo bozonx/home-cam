@@ -12,22 +12,22 @@ let uniqIndex = 0;
 
 
 class FullViewModal {
-  // this is persistent element
-  _modalRootId= 'home-cam__modal-root';
-  // this element adds and removes on open/close
-  _modalId= 'home-cam__modal';
-  _streamElId = 'home-cam__stream';
-  _openEventName = 'modal-open';
-  _closeEventName = 'modal-close';
-  _modalTpl = `<div id="home-cam__modal">` +
-    `<div id="home-cam__loader"><div>Connecting ...</div></div>` +
-    `<div id="home-cam__body">` +
-    //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
-    `<video id="${this._streamElId}"></video>` +
-    `</div>` +
-    `</div>`;
-
   constructor() {
+    // this is persistent element
+    this._modalRootId= 'home-cam__modal-root';
+    // this element adds and removes on open/close
+    this._modalId= 'home-cam__modal';
+    this._streamElId = 'home-cam__stream';
+    this._openEventName = 'modal-open';
+    this._closeEventName = 'modal-close';
+    this._modalTpl = `<div id="home-cam__modal">` +
+      `<div id="home-cam__loader"><div>Connecting ...</div></div>` +
+      `<div id="home-cam__body">` +
+      //`<div id="home-cam__close"><span aria-hidden="true">&times;</span></div>` +
+      `<video id="${this._streamElId}"></video>` +
+      `</div>` +
+      `</div>`;
+
     const modalRootEl = document.createElement('div');
 
     modalRootEl.setAttribute('id', this._modalRootId);
@@ -103,12 +103,11 @@ class FullViewModal {
 
 
 class Camera {
-  defaultImgWidth = 300;
-  defaultImgHeight = 169;
-  defaultUpdatingIntervalSec = 10;
-
-
   constructor(rootEl, fullViewModal, params) {
+    this.defaultImgWidth = 300;
+    this.defaultImgHeight = 169;
+    this.defaultUpdatingIntervalSec = 10;
+
     this._rootEl = rootEl;
     this._fullViewModal = fullViewModal;
     this._params = params;
