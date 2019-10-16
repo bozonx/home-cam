@@ -42,9 +42,9 @@ export interface CamConfig {
 
 export interface RtmpConfig {
   port: number;
-  chunk_size: number,
-  gop_cache: boolean,
-  ping: number,
+  chunk_size: number;
+  gop_cache: boolean;
+  ping: number;
   ping_timeout: number;
 }
 

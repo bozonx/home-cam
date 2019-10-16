@@ -22,5 +22,10 @@ camDefaults:
 #    c:a: aac
 #    ar: 44100
 
+browserStreamServer:
+  # TODO: определить автоматом
+  host: 192.168.88.3
+
 serversDefaults:
+  #host: 192.168.88.11
   host: 0.0.0.0

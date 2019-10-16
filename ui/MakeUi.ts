@@ -10,7 +10,8 @@ const INDEX_HTML_TPL = `<!doctype html>
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="cam-view/home-cam-view.css" />
-<script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>
+<!--<script src="https://cdn.bootcss.com/flv.js/1.5.0/flv.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flv.js/1.5.0/flv.min.js"></script>
 <script src="cam-view/home-cam-view.js"></script>
 </head>
 <body>

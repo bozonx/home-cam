@@ -15,33 +15,33 @@
   },
   "dependencies": {
     "@types/finalhandler": "^1.1.0",
-    "@types/i2c-bus": "^1.0.21",
+    "@types/i2c-bus": "^1.0.26",
     "@types/js-yaml": "^3.12.1",
-    "@types/lodash": "^4.14.123",
-    "@types/node": "^11.13.8",
-    "@types/serve-static": "^1.13.2",
+    "@types/lodash": "^4.14.144",
+    "@types/node": "^12.11.1",
+    "@types/serve-static": "^1.13.3",
     "@types/shelljs": "^0.8.5",
-    "@types/yargs": "^13.0.0",
+    "@types/yargs": "^13.0.3",
     "finalhandler": "^1.1.2",
     "js-yaml": "^3.13.1",
-    "lodash": "^4.17.11",
-    "node-media-server": "^2.1.0",
+    "lodash": "^4.17.15",
+    "node-media-server": "^2.1.4",
     "serve-static": "^1.14.1",
     "shelljs": "^0.8.3",
-    "ts-node": "8.1.0",
-    "typescript": "^3.4.5",
-    "yaml": "^1.5.0",
-    "yargs": "^13.2.2"
+    "ts-node": "8.4.1",
+    "typescript": "^3.6.4",
+    "yaml": "^1.7.2",
+    "yargs": "^14.2.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "coffee-coverage": "^3.0.1",
     "coffeescript": "^2.4.1",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.1",
     "rewire": "^4.0.1",
-    "sinon": "^7.3.2",
+    "sinon": "^7.5.0",
     "sinon-chai": "^3.3.0",
-    "tslint": "^5.16.0"
+    "tslint": "^5.20.0"
   }
 }
